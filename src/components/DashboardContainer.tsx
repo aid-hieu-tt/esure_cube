@@ -58,13 +58,7 @@ export const DashboardContainer: React.FC = () => {
 
   return (
     <main className="min-h-screen bg-[#f4f7f6] p-4 md:p-6 lg:p-8 relative">
-      {/* Subtle top loading bar when refreshing with filters */}
-      {refreshing && (
-        <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-blue-100 overflow-hidden">
-          <div className="h-full bg-blue-600 animate-pulse" style={{ width: '100%' }} />
-        </div>
-      )}
-      <div className={`max-w-7xl mx-auto transition-opacity duration-200 ${refreshing ? 'opacity-70 pointer-events-none' : 'opacity-100'}`}>
+      <div className="max-w-7xl mx-auto">
         <Header 
           onOpenSettings={() => setIsSettingOpen(true)} 
           dateValue={dateRange}
