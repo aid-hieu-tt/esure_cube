@@ -24,7 +24,7 @@ function buildCubeFilters(filters: FilterState): Array<{ member: string; operato
 
   if (filters.regions.length > 0) {
     cubeFilters.push({
-      member: 'dashboard_overview.city',
+      member: 'dashboard_overview.agencies_name',
       operator: 'equals',
       values: filters.regions,
     });

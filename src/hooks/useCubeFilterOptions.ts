@@ -56,7 +56,7 @@ export function useCubeFilterOptions(dateRange: DateRangeValue = 'This month'): 
         const [cityRows, statusRows, productRows, catRows, durationRows, providerRows, paymentRows] = await Promise.all([
           cubeLoad({
             measures: ['dashboard_overview.totalRevenue'],
-            dimensions: ['dashboard_overview.city'],
+            dimensions: ['dashboard_overview.agencies_name'],
             timeDimensions: [orderTimeDim],
             order: { 'dashboard_overview.totalRevenue': 'desc' },
             limit: 100,
@@ -105,7 +105,7 @@ export function useCubeFilterOptions(dateRange: DateRangeValue = 'This month'): 
         ]);
 
         setOptions({
-          cities: toOptionsWithMetric(cityRows, 'dashboard_overview.city', 'dashboard_overview.totalRevenue'),
+          cities: toOptionsWithMetric(cityRows, 'dashboard_overview.agencies_name', 'dashboard_overview.totalRevenue'),
           statuses: toOptionsWithMetric(statusRows, 'dashboard_overview.status', 'dashboard_overview.totalRevenue'),
           products: toOptionsWithMetric(productRows, 'dashboard_overview.order_items_packageName', 'dashboard_overview.order_items_totalRevenue'),
           categories: toOptionsWithMetric(catRows, 'dashboard_overview.order_items_productName', 'dashboard_overview.order_items_totalRevenue'),

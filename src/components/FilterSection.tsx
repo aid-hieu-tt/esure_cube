@@ -39,7 +39,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
     <div className="bg-white p-4 rounded-md shadow-sm mb-6 border border-gray-200">
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <MultiSelectDropdown
-          label="Thành phố"
+          label="Đại lý"
           options={cityOptions}
           selectedIds={filters.regions}
           onChange={(ids) => onChange({ ...filters, regions: ids })}

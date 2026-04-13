@@ -24,12 +24,12 @@ export const MiniTables: React.FC<MiniTablesProps> = ({ topPerformers, inactiveU
       {/* Top 7 Doanh số */}
       <div className="bg-white rounded-sm shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-[#fcd5b4] text-center py-2 font-bold text-gray-900 border-b border-gray-300">
-          Top 7 doanh số sản phẩm theo thành phố
+          Top 7 doanh số sản phẩm theo đại lý
         </div>
         <table className="w-full text-sm text-left">
           <thead className="bg-[#002060] text-white">
             <tr>
-              <th className="py-2 px-3 font-medium border-r border-white/20">Thành phố</th>
+              <th className="py-2 px-3 font-medium border-r border-white/20">Đại lý</th>
               <th className="py-2 px-3 font-medium border-r border-white/20">Sản phẩm</th>
               <th className="py-2 px-3 font-medium text-center">Tổng</th>
             </tr>

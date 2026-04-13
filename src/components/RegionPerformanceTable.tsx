@@ -32,14 +32,14 @@ export const RegionPerformanceTable: React.FC<RegionPerformanceTableProps> = ({ 
     <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
       <div className="px-5 py-4 border-b border-gray-100">
         <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
-          Hiệu suất theo Thành phố
+          Hiệu suất theo Đại lý
         </h3>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-50 text-left">
-              <th className="px-4 py-3 font-semibold text-gray-600 whitespace-nowrap">Thành phố</th>
+              <th className="px-4 py-3 font-semibold text-gray-600 whitespace-nowrap">Đại lý</th>
               <th className="px-4 py-3 font-semibold text-gray-600 text-right whitespace-nowrap">DS ngày</th>
               <th className="px-4 py-3 font-semibold text-gray-600 text-right whitespace-nowrap">DS tháng</th>
               <th className="px-4 py-3 font-semibold text-gray-600 text-right whitespace-nowrap">Chỉ tiêu</th>

@@ -28,10 +28,10 @@ export const ORDERS_BY_STATUS_QUERY: CubeQuery = {
   }],
 };
 
-/** Doanh số theo thành phố (= Khu vực) */
+/** Doanh số theo đại lý (Partner) */
 export const REVENUE_BY_CITY_QUERY: CubeQuery = {
   measures: ['dashboard_overview.totalRevenue', 'dashboard_overview.count', 'dashboard_overview.totalPaid'],
-  dimensions: ['dashboard_overview.city'],
+  dimensions: ['dashboard_overview.agencies_name'],
   order: { 'dashboard_overview.totalRevenue': 'desc' },
   limit: 15,
   timeDimensions: [{
@@ -44,7 +44,7 @@ export const REVENUE_BY_CITY_QUERY: CubeQuery = {
 export const REVENUE_BY_PRODUCT_QUERY: CubeQuery = {
   measures: ['dashboard_overview.order_items_totalRevenue', 'dashboard_overview.order_items_quantity', 'dashboard_overview.order_items_count'],
   dimensions: [
-    'dashboard_overview.city',
+    'dashboard_overview.agencies_name',
     'dashboard_overview.order_items_productName', 
     'dashboard_overview.order_items_packageName',
     'dashboard_overview.order_items_durationName',
@@ -84,13 +84,12 @@ export const REVENUE_BY_DURATION_QUERY: CubeQuery = {
 export const PARTNER_DETAIL_QUERY: CubeQuery = {
   measures: ['dashboard_overview.order_items_totalRevenue', 'dashboard_overview.order_items_quantity', 'dashboard_overview.order_items_count'],
   dimensions: [
-    'dashboard_overview.city',
+    'dashboard_overview.agencies_name',
     'dashboard_overview.order_items_productName', 
     'dashboard_overview.order_items_packageName',
     'dashboard_overview.order_items_durationName',
     'dashboard_overview.order_items_providerName',
-    'dashboard_overview.paymentmethod',
-    'dashboard_overview.agencies_name'
+    'dashboard_overview.paymentmethod'
   ],
   order: { 'dashboard_overview.order_items_totalRevenue': 'desc' },
   limit: 50,

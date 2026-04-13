@@ -96,13 +96,13 @@ export default function TargetSetupForm({ onSaved, cityOptions = [] }: TargetSet
             <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mb-3 animate-pulse">
               <MapPin size={18} className="text-gray-400" />
             </div>
-            <p className="text-sm">Đang tải danh sách thành phố...</p>
+            <p className="text-sm">Đang tải danh sách đại lý...</p>
           </div>
         ) : (
           <div className="rounded-lg overflow-hidden border border-gray-200">
             {/* Table Header */}
             <div className="grid grid-cols-[1fr_1fr] bg-gray-50 border-b border-gray-200">
-              <div className="px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Thành phố</div>
+              <div className="px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Đại lý</div>
               <div className="px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Chỉ tiêu doanh thu (tr)</div>
             </div>
             {/* Table Body */}

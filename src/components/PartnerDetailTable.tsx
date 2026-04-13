@@ -37,15 +37,10 @@ export default function PartnerDetailTable({ data }: PartnerDetailTableProps) {
   }, [data, globalFilter]);
 
   const columns = [
-    columnHelper.accessor('partnerName', {
-      id: 'partnerName',
-      header: 'Đại lý',
-      cell: info => <span className="font-semibold text-emerald-700">{info.getValue()}</span>,
-    }),
     columnHelper.accessor('khuVuc', {
       id: 'khuVuc',
-      header: 'Thành phố',
-      cell: info => <span className="font-medium text-gray-800">{info.getValue()}</span>,
+      header: 'Đại lý',
+      cell: info => <span className="font-semibold text-emerald-700">{info.getValue()}</span>,
     }),
     columnHelper.accessor('nganhHang', {
       id: 'nganhHang',
