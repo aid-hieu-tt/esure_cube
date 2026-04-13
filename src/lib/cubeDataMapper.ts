@@ -86,9 +86,17 @@ export function mapToKPIs(
   return [
     ...providerCards,
     {
-      id: 'luyke',
-      title: 'Doanh số Lũy kế',
-      subtitle: `${totalOrders} đơn hàng`,
+      id: 'luyke-donhang',
+      title: 'Số đơn\nLũy kế',
+      subtitle: '',
+      value: totalOrders.toLocaleString('vi-VN'),
+      bgColor: 'bg-[#ffea00]',
+      textColor: 'text-black',
+    },
+    {
+      id: 'luyke-doanhthu',
+      title: 'Doanh số\nLũy kế',
+      subtitle: '',
       value: formatTr(totalRevenue),
       bgColor: 'bg-[#ffea00]',
       textColor: 'text-black',
@@ -228,6 +236,7 @@ export function mapToPartnerDetails(detailsData: CubeResultRow[]): PartnerDetail
         thoiHan: str(row['dashboard_overview.order_items_durationName']).trim() || '12 tháng (1 năm)',
         nhaBaoHiem: str(row['dashboard_overview.order_items_providerName']).trim() || 'BaoLong',
         phuongThucThanhToan: str(row['dashboard_overview.paymentmethod']).trim() || 'KHÁC',
+        partnerName: str(row['dashboard_overview.agencies_name']).trim() || 'N/A',
         quantity: num(row['dashboard_overview.order_items_quantity']),
         tongDoanhThu: revenue,
       };

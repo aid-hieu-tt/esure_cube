@@ -65,6 +65,7 @@ export interface PartnerDetailRow {
   thoiHan: string;
   nhaBaoHiem: string;
   phuongThucThanhToan: string;
+  partnerName: string;
   quantity: number;
   tongDoanhThu: number;
 }

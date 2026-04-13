@@ -89,7 +89,8 @@ export const PARTNER_DETAIL_QUERY: CubeQuery = {
     'dashboard_overview.order_items_packageName',
     'dashboard_overview.order_items_durationName',
     'dashboard_overview.order_items_providerName',
-    'dashboard_overview.paymentmethod'
+    'dashboard_overview.paymentmethod',
+    'dashboard_overview.agencies_name'
   ],
   order: { 'dashboard_overview.order_items_totalRevenue': 'desc' },
   limit: 50,

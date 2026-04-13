@@ -31,11 +31,17 @@ export default function PartnerDetailTable({ data }: PartnerDetailTableProps) {
       row.khuVuc.toLowerCase().includes(lowerFilter) ||
       row.nganhHang.toLowerCase().includes(lowerFilter) ||
       row.sanPham.toLowerCase().includes(lowerFilter) ||
-      row.nhaBaoHiem.toLowerCase().includes(lowerFilter)
+      row.nhaBaoHiem.toLowerCase().includes(lowerFilter) ||
+      row.partnerName.toLowerCase().includes(lowerFilter)
     );
   }, [data, globalFilter]);
 
   const columns = [
+    columnHelper.accessor('partnerName', {
+      id: 'partnerName',
+      header: 'Đại lý',
+      cell: info => <span className="font-semibold text-emerald-700">{info.getValue()}</span>,
+    }),
     columnHelper.accessor('khuVuc', {
       id: 'khuVuc',
       header: 'Thành phố',
