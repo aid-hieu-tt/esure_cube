@@ -12,7 +12,6 @@ import { ChartsSection } from './ChartsSection';
 import { RegionPerformanceTable } from './RegionPerformanceTable';
 import RightDrawer from './Drawer';
 import TargetSetupForm from './TargetSetupForm';
-import TimeSetupForm from './TimeSetupForm';
 import { DateRangeValue } from './LookerDateRangePicker';
 
 export const DashboardContainer: React.FC = () => {
@@ -32,7 +31,6 @@ export const DashboardContainer: React.FC = () => {
   const [activePartner, setActivePartner] = useState<'MIC' | 'BaoLong' | null>(null);
 
   const [isSettingOpen, setIsSettingOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'target' | 'time'>('target');
 
   if (loading) {
     return (
@@ -108,24 +106,7 @@ export const DashboardContainer: React.FC = () => {
         onClose={() => setIsSettingOpen(false)}
         title="Cài đặt hệ thống"
       >
-        {/* Pill-style tabs */}
-        <div className="flex gap-1 p-1 bg-gray-100 rounded-xl mb-6">
-           <button 
-             className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeTab === 'target' ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-             onClick={() => setActiveTab('target')}
-           >
-             Chỉ tiêu Kinh doanh
-           </button>
-           <button 
-             className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${activeTab === 'time' ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-             onClick={() => setActiveTab('time')}
-           >
-             Tiến độ Thời gian
-           </button>
-        </div>
-
-        {activeTab === 'target' && <TargetSetupForm onSaved={() => setIsSettingOpen(false)} cityOptions={filterOptions.cities} />}
-        {activeTab === 'time' && <TimeSetupForm onSaved={() => setIsSettingOpen(false)} />}
+        <TargetSetupForm onSaved={() => setIsSettingOpen(false)} cityOptions={filterOptions.cities} />
       </RightDrawer>
     </main>
   );
