@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { ProviderDailyRevenue } from '../types';
+import { useCrossFilter } from '../context/CrossFilterContext';
 
 const PROVIDER_COLORS: Record<string, string> = {
   BaoLong: '#2563eb',
@@ -33,6 +34,8 @@ interface ProviderRevenueChartProps {
 }
 
 export const ProviderRevenueChart: React.FC<ProviderRevenueChartProps> = ({ data, providerNames }) => {
+  const { toggleFilter, filters } = useCrossFilter();
+
   if (!data || data.length === 0) {
     return (
       <div className="bg-white rounded-sm shadow-sm border border-gray-200 overflow-hidden p-8 text-center text-gray-400">
@@ -75,23 +78,34 @@ export const ProviderRevenueChart: React.FC<ProviderRevenueChartProps> = ({ data
               }}
             />
             <Legend
-              wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }}
+              wrapperStyle={{ fontSize: '12px', paddingTop: '8px', cursor: 'pointer' }}
               iconType="circle"
               iconSize={8}
+              onClick={(e: any) => {
+                if (e && e.dataKey) toggleFilter('providers', String(e.dataKey));
+              }}
             />
-            {providerNames.map((name, i) => (
-              <Line
-                key={name}
-                type="monotone"
-                dataKey={name}
-                name={name}
-                stroke={PROVIDER_COLORS[name] || DEFAULT_COLORS[i % DEFAULT_COLORS.length]}
-                strokeWidth={2}
-                dot={{ r: 3, fill: PROVIDER_COLORS[name] || DEFAULT_COLORS[i % DEFAULT_COLORS.length] }}
-                activeDot={{ r: 5 }}
-                connectNulls
-              />
-            ))}
+            {providerNames.map((name, i) => {
+              const isFilteredOut = filters['providers'] && filters['providers'] !== name;
+              return (
+                <Line
+                  key={name}
+                  type="monotone"
+                  dataKey={name}
+                  name={name}
+                  stroke={PROVIDER_COLORS[name] || DEFAULT_COLORS[i % DEFAULT_COLORS.length]}
+                  strokeOpacity={isFilteredOut ? 0.2 : 1}
+                  strokeWidth={filters['providers'] === name ? 3 : 2}
+                  dot={{ r: 3, fill: PROVIDER_COLORS[name] || DEFAULT_COLORS[i % DEFAULT_COLORS.length], opacity: isFilteredOut ? 0.2 : 1 }}
+                  activeDot={{ 
+                    r: 5, 
+                    onClick: (event: any, payload: any) => toggleFilter('providers', payload.dataKey),
+                    style: { cursor: 'pointer' }
+                  }}
+                  connectNulls
+                />
+              );
+            })}
           </LineChart>
         </ResponsiveContainer>
       </div>

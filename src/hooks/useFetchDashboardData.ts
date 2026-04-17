@@ -17,16 +17,31 @@ import {
 import { mapCubeDataToDashboard } from '../lib/cubeDataMapper';
 import { DateRangeValue } from '../components/LookerDateRangePicker';
 import { FilterState } from '../components/FilterSection';
+import { CrossFilterState } from '../context/CrossFilterContext';
 
 // Map FilterState selections → Cube.js filter objects
 function buildCubeFilters(filters: FilterState): Array<{ member: string; operator: string; values: string[] }> {
   const cubeFilters: Array<{ member: string; operator: string; values: string[] }> = [];
 
-  if (filters.regions.length > 0) {
+  if (filters.agencies && filters.agencies.length > 0) {
     cubeFilters.push({
       member: 'dashboard_overview.agencies_name',
       operator: 'equals',
-      values: filters.regions,
+      values: filters.agencies,
+    });
+  }
+  if (filters.regionCodes && filters.regionCodes.length > 0) {
+    cubeFilters.push({
+      member: 'dashboard_overview.user_agencies_regionName',
+      operator: 'equals',
+      values: filters.regionCodes,
+    });
+  }
+  if (filters.branchCodes && filters.branchCodes.length > 0) {
+    cubeFilters.push({
+      member: 'dashboard_overview.user_agencies_branchName',
+      operator: 'equals',
+      values: filters.branchCodes,
     });
   }
   if (filters.categories.length > 0) {
@@ -68,9 +83,36 @@ function buildCubeFilters(filters: FilterState): Array<{ member: string; operato
   return cubeFilters;
 }
 
+function buildCrossFilters(crossFilters: CrossFilterState, excludeKey?: string) {
+  const result: Array<{ member: string; operator: string; values: string[] }> = [];
+  const map: Record<string, string> = {
+    regionCodes: 'dashboard_overview.user_agencies_regionName',
+    branchCodes: 'dashboard_overview.user_agencies_branchName',
+    categories: 'dashboard_overview.order_items_productName',
+    products: 'dashboard_overview.order_items_packageName',
+    durations: 'dashboard_overview.order_items_durationName',
+    providers: 'dashboard_overview.order_items_providerName',
+    paymentMethod: 'dashboard_overview.paymentmethod'
+  };
+
+  for (const [key, value] of Object.entries(crossFilters)) {
+    if (key === excludeKey) continue;
+    if (!value) continue;
+    if (map[key]) {
+      result.push({
+        member: map[key],
+        operator: 'equals',
+        values: [String(value)]
+      });
+    }
+  }
+  return result;
+}
+
 export const useFetchDashboardData = (
   dateRange: DateRangeValue = 'This month',
-  filters: FilterState = { regions: [], products: [], categories: [], durations: [], providers: [], partners: [] },
+  filters: FilterState = { agencies: [], products: [], categories: [], durations: [], providers: [], partners: [], regionCodes: [], branchCodes: [] },
+  crossFilters: CrossFilterState = {}
 ) => {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -88,15 +130,17 @@ export const useFetchDashboardData = (
         }
         setError(null);
 
-        const cubeFilters = buildCubeFilters(filters);
+        const globalCubeFilters = buildCubeFilters(filters);
 
         // Build query with time dimension + cross-filters
-        const buildQuery = (baseQuery: any, dateDim: string) => {
+        const buildQuery = (baseQuery: any, dateDim: string, excludeCrossFilterKey?: string) => {
+          const crossCubeFilters = buildCrossFilters(crossFilters, excludeCrossFilterKey);
           return {
             ...baseQuery,
             filters: [
               ...(baseQuery.filters || []),
-              ...cubeFilters,
+              ...globalCubeFilters,
+              ...crossCubeFilters,
             ],
             timeDimensions: [{
               dimension: dateDim,
@@ -109,15 +153,15 @@ export const useFetchDashboardData = (
         const queries = {
           kpi: buildQuery(KPI_QUERY, 'dashboard_overview.orderdate'),
           status: buildQuery(ORDERS_BY_STATUS_QUERY, 'dashboard_overview.orderdate'),
-          city: buildQuery(REVENUE_BY_CITY_QUERY, 'dashboard_overview.orderdate'),
+          city: buildQuery(REVENUE_BY_CITY_QUERY, 'dashboard_overview.orderdate', 'regionCodes'),
           product: buildQuery(REVENUE_BY_PRODUCT_QUERY, 'dashboard_overview.order_items_createdat'),
-          payment: buildQuery(REVENUE_BY_PAYMENT_METHOD_QUERY, 'dashboard_overview.orderdate'),
-          provider: buildQuery(REVENUE_BY_PROVIDER_QUERY, 'dashboard_overview.order_items_createdat'),
+          payment: buildQuery(REVENUE_BY_PAYMENT_METHOD_QUERY, 'dashboard_overview.orderdate', 'paymentMethod'),
+          provider: buildQuery(REVENUE_BY_PROVIDER_QUERY, 'dashboard_overview.order_items_createdat', 'providers'),
           daily: buildQuery(DAILY_ORDERS_QUERY, 'dashboard_overview.orderdate'),
-          dailyProvider: buildQuery(DAILY_REVENUE_BY_PROVIDER_QUERY, 'dashboard_overview.order_items_createdat'),
+          dailyProvider: buildQuery(DAILY_REVENUE_BY_PROVIDER_QUERY, 'dashboard_overview.order_items_createdat', 'providers'),
           details: buildQuery(PARTNER_DETAIL_QUERY, 'dashboard_overview.order_items_createdat'),
-          pieProduct: buildQuery(REVENUE_BY_PRODUCT_NAME_QUERY, 'dashboard_overview.order_items_createdat'),
-          pieDuration: buildQuery(REVENUE_BY_DURATION_QUERY, 'dashboard_overview.order_items_createdat'),
+          pieProduct: buildQuery(REVENUE_BY_PRODUCT_NAME_QUERY, 'dashboard_overview.order_items_createdat', 'categories'),
+          pieDuration: buildQuery(REVENUE_BY_DURATION_QUERY, 'dashboard_overview.order_items_createdat', 'durations'),
         };
 
         const results = await cubeLoadMulti(queries);
@@ -137,11 +181,12 @@ export const useFetchDashboardData = (
     fetchData();
 
     // Auto-refresh every 60 seconds
-    const interval = setInterval(fetchData, 60_000);
+    const interval = setInterval(fetchData, 300_000); // 5 phút
     return () => clearInterval(interval);
   }, [
     dateRange ? JSON.stringify(dateRange) : null,
     JSON.stringify(filters),
+    JSON.stringify(crossFilters)
   ]);
 
   return { data, loading, refreshing, error };

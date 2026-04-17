@@ -411,7 +411,7 @@ export default function TargetSetupForm({ onSaved, cityOptions = [] }: TargetSet
           <div className="rounded-lg overflow-hidden border border-gray-200">
             {/* Table Header */}
             <div className="grid grid-cols-[1fr_1fr] bg-gray-50 border-b border-gray-200">
-              <div className="px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Đại lý</div>
+              <div className="px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Vùng</div>
               <div className="px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Chỉ tiêu doanh thu (tr)</div>
             </div>
             {/* Table Body */}

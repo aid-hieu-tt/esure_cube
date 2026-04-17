@@ -3,12 +3,14 @@ import { MultiSelectDropdown } from './MultiSelectDropdown';
 import type { FilterOption } from '../hooks/useCubeFilterOptions';
 
 export interface FilterState {
-  regions: string[];
+  agencies: string[];
   products: string[];
   categories: string[];
   durations: string[];
   providers: string[];
   partners: string[];
+  regionCodes: string[];
+  branchCodes: string[];
 }
 
 interface FilterSectionProps {
@@ -21,6 +23,8 @@ interface FilterSectionProps {
   durationOptions?: FilterOption[];
   providerOptions?: FilterOption[];
   paymentMethodOptions?: FilterOption[];
+  regionOptions?: FilterOption[];
+  branchOptions?: FilterOption[];
   optionsLoading?: boolean;
 }
 
@@ -33,16 +37,26 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
   durationOptions = [],
   providerOptions = [],
   paymentMethodOptions = [],
+  regionOptions = [],
+  branchOptions = [],
   optionsLoading = false,
 }) => {
   return (
     <div className="bg-white p-4 rounded-md shadow-sm mb-6 border border-gray-200">
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+
         <MultiSelectDropdown
-          label="Đại lý"
-          options={cityOptions}
-          selectedIds={filters.regions}
-          onChange={(ids) => onChange({ ...filters, regions: ids })}
+          label="Vùng"
+          options={regionOptions}
+          selectedIds={filters.regionCodes}
+          onChange={(ids) => onChange({ ...filters, regionCodes: ids })}
+          loading={optionsLoading}
+        />
+        <MultiSelectDropdown
+          label="Chi nhánh"
+          options={branchOptions}
+          selectedIds={filters.branchCodes}
+          onChange={(ids) => onChange({ ...filters, branchCodes: ids })}
           loading={optionsLoading}
         />
         <MultiSelectDropdown

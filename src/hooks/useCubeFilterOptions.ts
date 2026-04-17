@@ -20,6 +20,8 @@ export interface FilterOptions {
   durations: FilterOption[];
   providers: FilterOption[];
   paymentMethods: FilterOption[];
+  regions: FilterOption[];
+  branches: FilterOption[];
   loading: boolean;
 }
 
@@ -44,6 +46,8 @@ export function useCubeFilterOptions(dateRange: DateRangeValue = 'This month'): 
     durations: [],
     providers: [],
     paymentMethods: [],
+    regions: [],
+    branches: [],
     loading: true,
   });
 
@@ -53,7 +57,7 @@ export function useCubeFilterOptions(dateRange: DateRangeValue = 'This month'): 
         const orderTimeDim = { dimension: 'dashboard_overview.orderdate', dateRange };
         const itemTimeDim = { dimension: 'dashboard_overview.order_items_createdat', dateRange };
 
-        const [cityRows, statusRows, productRows, catRows, durationRows, providerRows, paymentRows] = await Promise.all([
+        const [cityRows, statusRows, productRows, catRows, durationRows, providerRows, paymentRows, regionRows, branchRows] = await Promise.all([
           cubeLoad({
             measures: ['dashboard_overview.totalRevenue'],
             dimensions: ['dashboard_overview.agencies_name'],
@@ -102,6 +106,20 @@ export function useCubeFilterOptions(dateRange: DateRangeValue = 'This month'): 
             order: { 'dashboard_overview.totalRevenue': 'desc' },
             limit: 50,
           }),
+          cubeLoad({
+            measures: ['dashboard_overview.totalRevenue'],
+            dimensions: ['dashboard_overview.user_agencies_regionName'],
+            timeDimensions: [orderTimeDim],
+            order: { 'dashboard_overview.totalRevenue': 'desc' },
+            limit: 10,
+          }),
+          cubeLoad({
+            measures: ['dashboard_overview.totalRevenue'],
+            dimensions: ['dashboard_overview.user_agencies_branchName'],
+            timeDimensions: [orderTimeDim],
+            order: { 'dashboard_overview.totalRevenue': 'desc' },
+            limit: 40,
+          }),
         ]);
 
         setOptions({
@@ -112,6 +130,8 @@ export function useCubeFilterOptions(dateRange: DateRangeValue = 'This month'): 
           durations: toOptionsWithMetric(durationRows, 'dashboard_overview.order_items_durationName', 'dashboard_overview.order_items_totalRevenue'),
           providers: toOptionsWithMetric(providerRows, 'dashboard_overview.order_items_providerName', 'dashboard_overview.order_items_totalRevenue'),
           paymentMethods: toOptionsWithMetric(paymentRows, 'dashboard_overview.paymentmethod', 'dashboard_overview.totalRevenue'),
+          regions: toOptionsWithMetric(regionRows, 'dashboard_overview.user_agencies_regionName', 'dashboard_overview.totalRevenue'),
+          branches: toOptionsWithMetric(branchRows, 'dashboard_overview.user_agencies_branchName', 'dashboard_overview.totalRevenue'),
           loading: false,
         });
       } catch (err) {

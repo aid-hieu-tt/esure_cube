@@ -2,6 +2,7 @@ import React from 'react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TimeTrackingData, RegionData } from '../types';
 import { formatCurrency } from '../lib/utils';
+import { useCrossFilter } from '../context/CrossFilterContext';
 
 interface ChartsSectionProps {
   timeTracking: TimeTrackingData[];
@@ -10,7 +11,9 @@ interface ChartsSectionProps {
 }
 
 export const ChartsSection: React.FC<ChartsSectionProps> = ({ timeTracking, regions, onRegionClick }) => {
+  const { toggleFilter, getDimStyle, filters } = useCrossFilter();
   const remainingDays = timeTracking.find(t => t.name === 'Còn lại')?.value || 0;
+
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
@@ -26,6 +29,12 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({ timeTracking, regi
     return null;
   };
 
+  const handleBarClick = (data: any) => {
+    if (data?.name) {
+      toggleFilter('regionCodes', data.name);
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
       {/* Donut Chart */}
@@ -34,10 +43,10 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({ timeTracking, regi
         <div className="flex-1 relative flex items-center justify-center">
           {/* Custom inner text */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-            <div className="bg-[#0a2342] rounded-full flex flex-col items-center justify-center text-white" style={{ width: '140px', height: '140px' }}>
+            <div className="bg-[#0a2342] rounded-full flex flex-col items-center justify-center text-white shadow-xl" style={{ width: '130px', height: '130px' }}>
               <span className="text-5xl font-bold leading-none mb-1">{remainingDays}</span>
               <span className="text-xl font-medium leading-tight">Ngày</span>
-              <span className="text-sm font-medium">Còn lại</span>
+              <span className="text-sm font-medium opacity-80">Còn lại</span>
             </div>
           </div>
           <ResponsiveContainer width="100%" height="100%">
@@ -79,29 +88,53 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({ timeTracking, regi
                   dataKey="name" 
                   interval={0}
                   tick={{ fill: '#374151', fontSize: 11, fontWeight: 700 }} 
-                  onClick={(data) => onRegionClick?.(data.value)}
+                  onClick={(data) => handleBarClick({ name: data.value })}
                   className="cursor-pointer hover:font-bold"
                 />
                 <YAxis tickFormatter={(value) => `${value / 1000}k`} />
-                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.05)' }} />
                 <Legend />
                 <Bar 
                   dataKey="actual" 
                   name="Thực hiện" 
+                  fill="#3b82f6"
                   stackId="a"
-                  fill="#3b82f6" 
                   animationBegin={200}
                   animationDuration={1000}
-                />
+                  onClick={handleBarClick}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {regions.map((entry, index) => (
+                    <Cell 
+                      key={`cell-a-${index}`} 
+                      fill={getDimStyle('regionCodes', entry.name, '#3b82f6')}
+                      stroke={filters['regionCodes'] === entry.name ? '#1e40af' : 'none'}
+                      strokeWidth={filters['regionCodes'] === entry.name ? 2 : 0}
+                      className="transition-all duration-300"
+                    />
+                  ))}
+                </Bar>
                 <Bar 
                   dataKey="target" 
                   name="Chỉ tiêu" 
+                  fill="#f97316"
                   stackId="a"
-                  fill="#f97316" 
                   radius={[4, 4, 0, 0]}
                   animationBegin={200}
                   animationDuration={1000}
-                />
+                  onClick={handleBarClick}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {regions.map((entry, index) => (
+                    <Cell 
+                      key={`cell-t-${index}`} 
+                      fill={getDimStyle('regionCodes', entry.name, '#f97316')}
+                      stroke={filters['regionCodes'] === entry.name ? '#c2410c' : 'none'}
+                      strokeWidth={filters['regionCodes'] === entry.name ? 2 : 0}
+                      className="transition-all duration-300"
+                    />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

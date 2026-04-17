@@ -59,7 +59,8 @@ export interface InactiveUnitData {
 
 export interface PartnerDetailRow {
   id: string;
-  khuVuc: string;
+  vung: string;
+  chiNhanh: string;
   nganhHang: string;
   sanPham: string;
   thoiHan: string;

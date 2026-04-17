@@ -109,6 +109,14 @@ export function mapToKPIs(
       bgColor: 'bg-[#e3f2fd]',
       textColor: 'text-blue-800',
     },
+    {
+      id: 'casesize',
+      title: 'DS bình quân\n(Case Size)',
+      subtitle: '',
+      value: formatTr(totalOrders > 0 ? totalRevenue / totalOrders : 0),
+      bgColor: 'bg-[#f3e5f5]', // a light purple distinct from blue and yellow
+      textColor: 'text-purple-800',
+    },
   ];
 }
 
@@ -132,15 +140,15 @@ export function mapToTimeTracking(dailyData: CubeResultRow[]): TimeTrackingData[
 // ============================================================
 export function mapToRegions(cityData: CubeResultRow[]): RegionData[] {
   return cityData
-    .filter(r => str(r['dashboard_overview.agencies_name']).trim() !== '')
+    .filter(r => str(r['dashboard_overview.user_agencies_regionName']).trim() !== '')
     .map((row, i) => {
       const revenue = num(row['dashboard_overview.totalRevenue']);
       const paid = num(row['dashboard_overview.totalPaid']);
       const target = revenue * 1.3; // Estimated target: 130% of actual
       return {
         id: `kv${i + 1}`,
-        name: str(row['dashboard_overview.agencies_name']).trim(),
-        businessUnit: str(row['dashboard_overview.agencies_name']).trim(),
+        name: str(row['dashboard_overview.user_agencies_regionName']).trim(),
+        businessUnit: str(row['dashboard_overview.user_agencies_regionName']).trim(),
         salesNT: Math.round(revenue * 0.45),
         salesNonNT: Math.round(revenue * 0.55),
         target: Math.round(target),
@@ -155,7 +163,7 @@ export function mapToRegions(cityData: CubeResultRow[]): RegionData[] {
 // ============================================================
 export function mapToRegionPerformance(cityData: CubeResultRow[]): RegionPerformanceData[] {
   return cityData
-    .filter(r => str(r['dashboard_overview.agencies_name']).trim() !== '')
+    .filter(r => str(r['dashboard_overview.user_agencies_regionName']).trim() !== '')
     .map((row, i) => {
       const monthlySales = num(row['dashboard_overview.totalRevenue']);
       const orderCount = num(row['dashboard_overview.count']);
@@ -167,7 +175,7 @@ export function mapToRegionPerformance(cityData: CubeResultRow[]): RegionPerform
 
       return {
         id: `rp${i + 1}`,
-        region: str(row['dashboard_overview.agencies_name']).trim(),
+        region: str(row['dashboard_overview.user_agencies_regionName']).trim(),
         dailySales: Math.round(monthlySales / 30),
         monthlySales: Math.round(monthlySales),
         target: Math.round(target),
@@ -191,7 +199,7 @@ export function mapToTopPerformers(productData: CubeResultRow[], cityData: CubeR
     .slice(0, 7)
     .map((row, i) => ({
       id: String(i + 1),
-      region: str(row['dashboard_overview.agencies_name']).trim() || 'N/A',
+      region: str(row['dashboard_overview.user_agencies_regionName']).trim() || 'N/A',
       businessUnit: str(row['dashboard_overview.order_items_packageName']).trim(),
       total: num(row['dashboard_overview.order_items_totalRevenue']),
     }));
@@ -202,7 +210,7 @@ export function mapToTopPerformers(productData: CubeResultRow[], cityData: CubeR
 // ============================================================
 export function mapToInactiveUnits(cityData: CubeResultRow[]): InactiveUnitData[] {
   return cityData
-    .filter(r => str(r['dashboard_overview.agencies_name']).trim() !== '')
+    .filter(r => str(r['dashboard_overview.user_agencies_regionName']).trim() !== '')
     .map((row, i) => {
       const orderCount = num(row['dashboard_overview.count']);
       const totalUnits = Math.max(orderCount, 10);
@@ -211,7 +219,7 @@ export function mapToInactiveUnits(cityData: CubeResultRow[]): InactiveUnitData[
 
       return {
         id: String(i + 1),
-        region: str(row['dashboard_overview.agencies_name']).trim(),
+        region: str(row['dashboard_overview.user_agencies_regionName']).trim(),
         inactiveCount,
         ratioText: `${inactiveCount}/${totalUnits} (${totalUnits > 0 ? Math.round((inactiveCount / totalUnits) * 100) : 0}%)`,
         gap: formatTr(gap),
@@ -230,7 +238,8 @@ export function mapToPartnerDetails(detailsData: CubeResultRow[]): PartnerDetail
 
       return {
         id: String(i + 1),
-        khuVuc: str(row['dashboard_overview.agencies_name']).trim() || 'N/A',
+        vung: str(row['dashboard_overview.user_agencies_regionName']).trim() || 'N/A',
+        chiNhanh: str(row['dashboard_overview.user_agencies_branchName']).trim() || 'N/A',
         nganhHang: str(row['dashboard_overview.order_items_productName']).trim() || 'Bảo hiểm',
         sanPham: str(row['dashboard_overview.order_items_packageName']).trim().substring(0, 30),
         thoiHan: str(row['dashboard_overview.order_items_durationName']).trim() || '12 tháng (1 năm)',

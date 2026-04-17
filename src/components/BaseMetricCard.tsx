@@ -20,27 +20,36 @@ export const BaseMetricCard: React.FC<BaseMetricCardProps> = ({
   logo,
   onClick,
 }) => {
+  // Split title if it contains newlines to create heading hierarchy
+  const lines = title.split('\n');
+  const heading1 = lines[0] || '';
+  const heading2 = lines.slice(1).join(' ') || subtitle;
+
   return (
     <div
       onClick={onClick}
       className={cn(
-        'border border-gray-200 rounded-sm p-3 flex flex-col items-center justify-center text-center',
-        'transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg',
-        onClick && 'cursor-pointer',
+        'relative overflow-hidden border border-gray-200/80 rounded-xl p-3.5 flex flex-col items-center justify-center text-center h-full w-full',
+        'transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-gray-300 shadow-sm',
+        onClick && 'cursor-pointer active:scale-95',
         bgColor
       )}
     >
-      <h3 className="text-sm font-bold mb-1 text-gray-800 whitespace-pre-line">
-        {title}
+      <h3 className="text-[13px] md:text-sm font-bold text-gray-800 tracking-tight">
+        {heading1}
       </h3>
       
-      {subtitle && (
-        <div className="text-[10px] font-medium text-gray-700 mb-2">
-          {subtitle}
-        </div>
+      {heading2 && (
+        <h4 className="text-[10px] md:text-[11px] font-semibold text-gray-500 mt-0.5">
+          {heading2}
+        </h4>
       )}
       
-      <p className={cn('text-2xl font-bold mt-auto', textColor)}>{value}</p>
+      <div className="mt-2.5 flex flex-col items-center justify-end flex-grow">
+        <p className={cn('text-2xl lg:text-[26px] font-extrabold tracking-tight', textColor)}>
+          {value}
+        </p>
+      </div>
     </div>
   );
 };

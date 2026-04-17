@@ -31,7 +31,7 @@ export const ORDERS_BY_STATUS_QUERY: CubeQuery = {
 /** Doanh số theo đại lý (Partner) */
 export const REVENUE_BY_CITY_QUERY: CubeQuery = {
   measures: ['dashboard_overview.totalRevenue', 'dashboard_overview.count', 'dashboard_overview.totalPaid'],
-  dimensions: ['dashboard_overview.agencies_name'],
+  dimensions: ['dashboard_overview.user_agencies_regionName'],
   order: { 'dashboard_overview.totalRevenue': 'desc' },
   limit: 15,
   timeDimensions: [{
@@ -44,7 +44,7 @@ export const REVENUE_BY_CITY_QUERY: CubeQuery = {
 export const REVENUE_BY_PRODUCT_QUERY: CubeQuery = {
   measures: ['dashboard_overview.order_items_totalRevenue', 'dashboard_overview.order_items_quantity', 'dashboard_overview.order_items_count'],
   dimensions: [
-    'dashboard_overview.agencies_name',
+    'dashboard_overview.user_agencies_regionName',
     'dashboard_overview.order_items_productName', 
     'dashboard_overview.order_items_packageName',
     'dashboard_overview.order_items_durationName',
@@ -84,7 +84,8 @@ export const REVENUE_BY_DURATION_QUERY: CubeQuery = {
 export const PARTNER_DETAIL_QUERY: CubeQuery = {
   measures: ['dashboard_overview.order_items_totalRevenue', 'dashboard_overview.order_items_quantity', 'dashboard_overview.order_items_count'],
   dimensions: [
-    'dashboard_overview.agencies_name',
+    'dashboard_overview.user_agencies_regionName',
+    'dashboard_overview.user_agencies_branchName',
     'dashboard_overview.order_items_productName', 
     'dashboard_overview.order_items_packageName',
     'dashboard_overview.order_items_durationName',

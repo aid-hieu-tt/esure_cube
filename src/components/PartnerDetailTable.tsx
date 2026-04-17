@@ -12,6 +12,7 @@ import { PartnerDetailRow } from '../types';
 import { Search, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { PaginationFooter } from './PaginationFooter';
 import { formatCurrency } from '../lib/utils';
+import { useCrossFilter } from '../context/CrossFilterContext';
 
 const columnHelper = createColumnHelper<PartnerDetailRow>();
 
@@ -22,46 +23,63 @@ interface PartnerDetailTableProps {
 export default function PartnerDetailTable({ data }: PartnerDetailTableProps) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<SortingState>([]);
+  const { filters, toggleFilter } = useCrossFilter();
 
   const filteredData = useMemo(() => {
-    if (!globalFilter) return data;
+    let result = data;
+    
+    // Cross-filtering constraints
+    if (filters['regionCodes']) result = result.filter(r => r.vung === filters['regionCodes']);
+    if (filters['branchCodes']) result = result.filter(r => r.chiNhanh === filters['branchCodes']);
+    if (filters['categories']) result = result.filter(r => r.nganhHang === filters['categories']);
+    if (filters['products']) result = result.filter(r => r.sanPham === filters['products']);
+    if (filters['providers']) result = result.filter(r => r.nhaBaoHiem === filters['providers']);
+    if (filters['paymentMethod']) result = result.filter(r => r.phuongThucThanhToan === filters['paymentMethod']);
+
+    if (!globalFilter) return result;
     const lowerFilter = globalFilter.toLowerCase();
     
-    return data.filter(row => 
-      row.khuVuc.toLowerCase().includes(lowerFilter) ||
+    return result.filter(row => 
+      row.vung.toLowerCase().includes(lowerFilter) ||
+      row.chiNhanh.toLowerCase().includes(lowerFilter) ||
       row.nganhHang.toLowerCase().includes(lowerFilter) ||
       row.sanPham.toLowerCase().includes(lowerFilter) ||
       row.nhaBaoHiem.toLowerCase().includes(lowerFilter) ||
       row.partnerName.toLowerCase().includes(lowerFilter)
     );
-  }, [data, globalFilter]);
+  }, [data, globalFilter, filters]);
 
   const columns = [
-    columnHelper.accessor('khuVuc', {
-      id: 'khuVuc',
-      header: 'Đại lý',
-      cell: info => <span className="font-semibold text-emerald-700">{info.getValue()}</span>,
+    columnHelper.accessor('vung', {
+      id: 'vung',
+      header: 'Vùng',
+      cell: info => <span className="font-semibold text-emerald-700 cursor-pointer hover:underline decoration-emerald-700 underline-offset-2" onClick={() => toggleFilter('regionCodes', info.getValue())}>{info.getValue()}</span>,
+    }),
+    columnHelper.accessor('chiNhanh', {
+      id: 'chiNhanh',
+      header: 'Chi nhánh',
+      cell: info => <span className="font-semibold text-emerald-700 cursor-pointer hover:underline decoration-emerald-700 underline-offset-2" onClick={() => toggleFilter('branchCodes', info.getValue())}>{info.getValue()}</span>,
     }),
     columnHelper.accessor('nganhHang', {
       id: 'nganhHang',
       header: 'Ngành hàng',
-      cell: info => <span className="font-medium text-gray-800">{info.getValue()}</span>,
+      cell: info => <span className="font-medium text-gray-800 cursor-pointer hover:underline decoration-gray-800 underline-offset-2" onClick={() => toggleFilter('categories', info.getValue())}>{info.getValue()}</span>,
     }),
     columnHelper.accessor('sanPham', {
       header: 'Sản phẩm',
-      cell: info => <span className="text-gray-700">{info.getValue()}</span>,
+      cell: info => <span className="text-gray-700 cursor-pointer hover:underline decoration-gray-700 underline-offset-2" onClick={() => toggleFilter('products', info.getValue())}>{info.getValue()}</span>,
     }),
     columnHelper.accessor('thoiHan', {
       header: 'Thời hạn',
-      cell: info => <span className="text-gray-700">{info.getValue()}</span>,
+      cell: info => <span className="text-gray-700 cursor-pointer hover:underline decoration-gray-700 underline-offset-2" onClick={() => toggleFilter('durations', info.getValue())}>{info.getValue()}</span>,
     }),
     columnHelper.accessor('nhaBaoHiem', {
       header: 'Nhà bảo hiểm',
-      cell: info => <span className="font-semibold text-blue-800">{info.getValue()}</span>,
+      cell: info => <span className="font-semibold text-blue-800 cursor-pointer hover:underline decoration-blue-800 underline-offset-2" onClick={() => toggleFilter('providers', info.getValue())}>{info.getValue()}</span>,
     }),
     columnHelper.accessor('phuongThucThanhToan', {
       header: 'Thanh toán',
-      cell: info => <span className="text-gray-700">{info.getValue()}</span>,
+      cell: info => <span className="text-gray-700 cursor-pointer hover:underline decoration-gray-700 underline-offset-2" onClick={() => toggleFilter('paymentMethod', info.getValue())}>{info.getValue()}</span>,
     }),
     columnHelper.accessor('quantity', {
       header: 'SL Bán',
