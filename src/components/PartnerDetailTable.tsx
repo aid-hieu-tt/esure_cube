@@ -9,7 +9,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { PartnerDetailRow } from '../types';
-import { Search, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { PaginationFooter } from './PaginationFooter';
 import { formatCurrency } from '../lib/utils';
 import { useCrossFilter } from '../context/CrossFilterContext';
@@ -110,19 +110,19 @@ export default function PartnerDetailTable({ data }: PartnerDetailTableProps) {
   });
 
   return (
-    <div className="w-full mb-6 bg-white rounded-sm shadow-sm overflow-hidden border border-gray-200">
-      <div className="flex flex-col sm:flex-row justify-between items-center p-4 border-b border-gray-200 gap-4">
-        <h3 className="text-lg font-bold text-[#002060]">Chi tiết Sản phẩm &amp; Đối tác</h3>
+    <div className="mb-1 w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
+      <div className="flex flex-col items-center justify-between gap-4 border-b border-slate-200 bg-slate-50/60 p-4 sm:flex-row">
+        <h3 className="text-base font-bold text-slate-800">Chi tiet San pham va Doi tac</h3>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse text-sm">
+        <table className="w-full border-collapse text-left text-sm">
           <thead>
             {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id} className="bg-[#0a2342] text-white">
+              <tr key={headerGroup.id} className="bg-slate-800 text-white">
                 {headerGroup.headers.map(header => (
                   <th 
                     key={header.id} 
-                    className="p-3 font-bold border-r border-white/10 last:border-r-0 cursor-pointer select-none hover:bg-[#163a6a] transition-colors"
+                    className="cursor-pointer select-none border-r border-white/10 p-3 font-semibold transition-colors last:border-r-0 hover:bg-slate-700"
                     onClick={header.column.getToggleSortingHandler()}
                   >
                     <div className="flex items-center gap-1">
@@ -148,14 +148,14 @@ export default function PartnerDetailTable({ data }: PartnerDetailTableProps) {
           <tbody>
             {table.getRowModel().rows.map((row, index) => {
               return (
-                <tr 
+                <tr
                   key={row.id} 
-                  className={`bg-white hover:bg-gray-50 border-t border-gray-200`}
+                  className="border-t border-slate-200 bg-white hover:bg-slate-50"
                 >
                   {row.getVisibleCells().map(cell => (
                     <td 
                       key={cell.id} 
-                      className="p-3 border-r border-gray-100 last:border-r-0"
+                      className="border-r border-slate-100 p-3 last:border-r-0"
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>

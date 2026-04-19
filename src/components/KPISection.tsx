@@ -9,22 +9,20 @@ interface KPISectionProps {
 
 export const KPISection: React.FC<KPISectionProps> = ({ kpis }) => {
   const { toggleFilter, filters } = useCrossFilter();
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
-      {kpis.map((kpi) => {
-        let onClick = undefined;
-        let opacity = 1;
+  const providerFilterMap: Record<string, string> = {
+    mic: 'MIC',
+    baolong: 'BaoLong',
+  };
 
-        if (kpi.id === 'mic') {
-          onClick = () => toggleFilter('providers', 'MIC');
-          opacity = filters['providers'] && filters['providers'] !== 'MIC' ? 0.3 : 1;
-        } else if (kpi.id === 'baolong') {
-          onClick = () => toggleFilter('providers', 'BaoLong');
-          opacity = filters['providers'] && filters['providers'] !== 'BaoLong' ? 0.3 : 1;
-        }
+  return (
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+      {kpis.map((kpi) => {
+        const filterValue = providerFilterMap[kpi.id];
+        const onClick = filterValue ? () => toggleFilter('providers', filterValue) : undefined;
+        const isDimmed = filterValue ? Boolean(filters.providers && filters.providers !== filterValue) : false;
 
         return (
-          <div key={kpi.id} className="transition-opacity duration-300 h-full" style={{ opacity }}>
+          <div key={kpi.id} className={`h-full transition-opacity duration-300 ${isDimmed ? 'opacity-30' : 'opacity-100'}`}>
             <BaseMetricCard
               title={kpi.title}
               value={kpi.value}

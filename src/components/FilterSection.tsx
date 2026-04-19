@@ -42,8 +42,11 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
   optionsLoading = false,
 }) => {
   return (
-    <div className="bg-white p-4 rounded-md shadow-sm mb-6 border border-gray-200">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+    <section className="rounded-2xl border border-slate-200/80 bg-white/90 p-4 shadow-md shadow-slate-200/70 backdrop-blur md:p-5">
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Bo loc dashboard</h2>
+      </div>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
 
         <MultiSelectDropdown
           label="Vùng"
@@ -95,6 +98,6 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
           loading={optionsLoading}
         />
       </div>
-    </div>
+    </section>
   );
 };

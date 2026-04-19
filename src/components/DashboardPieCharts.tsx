@@ -32,8 +32,8 @@ const ChartBox: React.FC<ChartBoxProps> = ({ title, dimension, data }) => {
 
   if (!data || data.length === 0) {
     return (
-      <div className="bg-white rounded-sm shadow-sm border border-gray-200 overflow-hidden flex flex-col items-center justify-center h-[300px] text-gray-400">
-        <p className="text-sm font-semibold mb-2">{title}</p>
+      <div className="flex h-[300px] flex-col items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white text-gray-400 shadow-md shadow-slate-200/70">
+        <p className="mb-2 text-sm font-semibold">{title}</p>
         <p className="text-xs">Không có dữ liệu</p>
       </div>
     );
@@ -53,11 +53,11 @@ const ChartBox: React.FC<ChartBoxProps> = ({ title, dimension, data }) => {
   });
 
   return (
-    <div className="bg-white rounded-sm shadow-sm border border-gray-200 overflow-hidden flex flex-col h-[300px]">
-      <div className="bg-[#f0f4f8] text-center py-2 font-bold text-[#002060] border-b border-gray-200 text-sm shrink-0">
+    <div className="flex h-[300px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
+      <div className="shrink-0 border-b border-slate-200 bg-slate-50 py-2 text-center text-sm font-bold text-slate-800">
         {title}
       </div>
-      <div className="flex-1 w-full flex flex-row items-center justify-center p-2">
+      <div className="flex h-full w-full flex-1 flex-row items-center justify-center p-2">
         {/* Left 50% for strictly the Pie Chart */}
         <div className="w-[50%] h-full flex justify-center items-center">
           <PieChart
@@ -70,7 +70,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({ title, dimension, data }) => {
                 cornerRadius: 3, 
                 arcLabel: (item) => `${((item.value / total) * 100).toFixed(0)}%`,
                 arcLabelMinAngle: 15, 
-                valueFormatter: (item: any) => {
+                valueFormatter: (item: number | { value?: number }) => {
                   const val = typeof item === 'number' ? item : item?.value;
                   return val !== undefined && val !== null ? formatVND(val) : '';
                 },
@@ -93,11 +93,11 @@ const ChartBox: React.FC<ChartBoxProps> = ({ title, dimension, data }) => {
             {muiData.map((d) => (
               <div 
                 key={d.id} 
-                className="flex items-center text-[12px] text-gray-800 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors"
+                className="flex cursor-pointer items-center rounded p-1 text-[12px] text-slate-800 transition-colors hover:bg-slate-100"
                 onClick={() => toggleFilter(dimension, d.label)}
               >
                 <span 
-                  className="w-2.5 h-2.5 rounded-full shrink-0 mr-2.5 shadow-sm transition-all"
+                  className="mr-2.5 h-2.5 w-2.5 shrink-0 rounded-full shadow-sm transition-all"
                   style={{ backgroundColor: d.color, opacity: filters[dimension] && filters[dimension] !== d.label ? 0.3 : 1 }}
                 ></span>
                 <span 

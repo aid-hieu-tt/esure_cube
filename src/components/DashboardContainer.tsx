@@ -28,23 +28,25 @@ function DashboardContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f4f7f6] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-800"></div>
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-2 border-blue-200 border-b-blue-700"></div>
       </div>
     );
   }
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-[#f4f7f6] flex items-center justify-center">
-        <div className="text-red-500 font-medium">{error || 'No data available'}</div>
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
+        <div className="rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-semibold text-red-600 shadow-sm">
+          {error || 'No data available'}
+        </div>
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#f4f7f6] p-4 md:p-6 lg:p-8 relative">
-      <div className="max-w-7xl mx-auto">
+    <main className="relative min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50 px-4 py-5 md:px-6 md:py-7 lg:px-8 lg:py-8">
+      <div className="mx-auto flex max-w-7xl flex-col gap-5">
         <Header onOpenSettings={() => setIsSettingOpen(true)} dateValue={dateRange} onDateChange={setDateRange} />
         <FilterSection filters={filters} onChange={setFilters} cityOptions={filterOptions.cities} paymentStatusOptions={filterOptions.paymentStatuses} productOptions={filterOptions.products} durationOptions={filterOptions.durations} providerOptions={filterOptions.providers} paymentMethodOptions={filterOptions.paymentMethods} regionOptions={filterOptions.regions} branchOptions={filterOptions.branches} optionsLoading={filterOptions.loading} />
         <FilterBadge />

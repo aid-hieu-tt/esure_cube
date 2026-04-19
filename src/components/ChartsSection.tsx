@@ -14,36 +14,38 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({ timeTracking, regi
   const { toggleFilter, getDimStyle, filters } = useCrossFilter();
   const remainingDays = timeTracking.find(t => t.name === 'Còn lại')?.value || 0;
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ payload: RegionData }>; label?: string }) => {
     if (active && payload && payload.length) {
-      const data = payload[0].payload;
+      const data = payload[0]?.payload;
+      if (!data) return null;
+
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded shadow-md">
+        <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-lg shadow-slate-200/60">
           <p className="font-bold mb-1">{label}</p>
-          <p className="text-sm text-gray-600">Chỉ tiêu: <span className="font-semibold text-orange-500">{formatCurrency(data.target)}</span></p>
-          <p className="text-sm text-gray-600">Thực hiện: <span className="font-semibold text-blue-800">{formatCurrency(data.actual)}</span></p>
-          <p className="text-sm text-gray-600">Đạt: <span className="font-semibold">{data.completionRate}%</span></p>
+          <p className="text-sm text-slate-600">Chỉ tiêu: <span className="font-semibold text-orange-500">{formatCurrency(data.target)}</span></p>
+          <p className="text-sm text-slate-600">Thực hiện: <span className="font-semibold text-blue-800">{formatCurrency(data.actual)}</span></p>
+          <p className="text-sm text-slate-600">Đạt: <span className="font-semibold">{data.completionRate}%</span></p>
         </div>
       );
     }
     return null;
   };
 
-  const handleBarClick = (data: any) => {
+  const handleBarClick = (data: { name?: string }) => {
     if (data?.name) {
       toggleFilter('regionCodes', data.name);
     }
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-5">
       {/* Donut Chart */}
-      <div className="lg:col-span-4 bg-white rounded-md shadow-sm p-4 h-80 flex flex-col">
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">Tiến độ thời gian</h3>
+      <div className="flex h-80 flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-md shadow-slate-200/70 lg:col-span-4">
+        <h3 className="mb-2 text-base font-bold text-slate-800">Tien do thoi gian</h3>
         <div className="flex-1 relative flex items-center justify-center">
           {/* Custom inner text */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-            <div className="bg-[#0a2342] rounded-full flex flex-col items-center justify-center text-white shadow-xl" style={{ width: '130px', height: '130px' }}>
+            <div className="flex flex-col items-center justify-center rounded-full bg-gradient-to-br from-slate-900 to-blue-700 text-white shadow-xl" style={{ width: '130px', height: '130px' }}>
               <span className="text-5xl font-bold leading-none mb-1">{remainingDays}</span>
               <span className="text-xl font-medium leading-tight">Ngày</span>
               <span className="text-sm font-medium opacity-80">Còn lại</span>
@@ -74,8 +76,8 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({ timeTracking, regi
       </div>
 
       {/* Bar Chart */}
-      <div className="lg:col-span-8 bg-white rounded-md shadow-sm p-4 h-80 flex flex-col w-full overflow-hidden">
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">So sánh Doanh số & Chỉ tiêu</h3>
+      <div className="flex h-80 w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-md shadow-slate-200/70 lg:col-span-8">
+        <h3 className="mb-2 text-base font-bold text-slate-800">So sanh doanh so va chi tieu</h3>
         <div className="flex-1 overflow-x-auto overflow-y-hidden w-full">
           <div style={{ minWidth: regions.length > 5 ? `${regions.length * 75}px` : '100%', height: '100%' }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -83,16 +85,16 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({ timeTracking, regi
                 data={regions}
                 margin={{ top: 20, right: 30, left: 20, bottom: 25 }}
               >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                 <XAxis 
                   dataKey="name" 
                   interval={0}
-                  tick={{ fill: '#374151', fontSize: 11, fontWeight: 700 }} 
+                  tick={{ fill: '#334155', fontSize: 11, fontWeight: 700 }} 
                   onClick={(data) => handleBarClick({ name: data.value })}
                   className="cursor-pointer hover:font-bold"
                 />
-                <YAxis tickFormatter={(value) => `${value / 1000}k`} />
-                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.05)' }} />
+                <YAxis tickFormatter={(value) => `${value / 1000}k`} tick={{ fill: '#64748b', fontSize: 11 }} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(148,163,184,0.16)' }} />
                 <Legend />
                 <Bar 
                   dataKey="actual" 

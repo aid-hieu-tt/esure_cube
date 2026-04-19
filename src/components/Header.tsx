@@ -10,23 +10,25 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenSettings, onDateChange, dateValue }) => {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+    <div className="flex flex-col gap-4 rounded-2xl border border-white/70 bg-white/85 p-4 shadow-lg shadow-slate-200/80 backdrop-blur md:flex-row md:items-center md:justify-between">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard Quản Trị</h1>
-        <p className="text-gray-500 mt-1">Tổng quan số liệu kinh doanh</p>
+        <h1 className="bg-gradient-to-r from-slate-900 to-blue-700 bg-clip-text text-2xl font-extrabold text-transparent md:text-3xl">
+          Dashboard Quan Tri
+        </h1>
+        <p className="mt-1 text-sm font-medium text-slate-500">Tong quan so lieu kinh doanh theo thoi gian thuc</p>
       </div>
-      <div className="mt-4 md:mt-0 flex items-center gap-3">
-        <LookerDateRangePicker 
+      <div className="flex items-center gap-3">
+        <LookerDateRangePicker
           value={dateValue} 
           onChange={(val) => onDateChange?.(val)} 
         />
-        
-        <button 
+
+        <button
           onClick={onOpenSettings}
-          className="bg-white p-2 rounded-md shadow-sm border border-gray-300 text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors cursor-pointer"
+          className="group rounded-xl border border-slate-200 bg-white p-2.5 text-slate-500 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 hover:shadow-md cursor-pointer"
           title="Cài đặt hệ thống"
         >
-          <Settings size={20} />
+          <Settings size={20} className="transition-transform duration-200 group-hover:rotate-45" />
         </button>
       </div>
     </div>
