@@ -4,11 +4,11 @@
  *
  * Cấu hình qua biến môi trường (đặt trên platform hoặc file .env):
  *   VITE_CUBE_API_URL  — URL Cube.js API (mặc định: http://localhost:4000/cubejs-api/v1)
- *   VITE_CUBE_TOKEN    — JWT token xác thực (mặc định: placeholder cho dev mode)
+ *   VITE_CUBE_API_TOKEN    — JWT token xác thực (mặc định: placeholder cho dev mode)
  */
 
-const CUBE_API_URL = import.meta.env.VITE_CUBE_API_URL || 'http://localhost:4000/cubejs-api/v1';
-const CUBE_TOKEN = import.meta.env['VITE_CUBE_TOKEN'] || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTI3MDAwMDB9.placeholder';
+const CUBE_API_URL = import.meta.env['VITE_CUBE_API_URL'] || 'http://localhost:4000/cubejs-api/v1';
+const CUBE_TOKEN = import.meta.env['VITE_CUBE_API_TOKEN'] || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTI3MDAwMDB9.placeholder';
 
 export interface CubeQuery {
   measures?: string[];
@@ -58,7 +58,7 @@ export async function cubeLoadMulti(queries: Record<string, CubeQuery>): Promise
   const results = await Promise.all(
     entries.map(([, query]) => cubeLoad(query))
   );
-  
+
   const mapped: Record<string, CubeResultRow[]> = {};
   entries.forEach(([key], i) => {
     mapped[key] = results[i];
