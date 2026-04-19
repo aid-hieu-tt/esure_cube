@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   createColumnHelper,
   flexRender,
@@ -9,7 +9,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { PartnerDetailRow } from '../types';
-import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, Search } from 'lucide-react';
 import { PaginationFooter } from './PaginationFooter';
 import { formatCurrency } from '../lib/utils';
 import { useCrossFilter } from '../context/CrossFilterContext';
@@ -109,10 +109,30 @@ export default function PartnerDetailTable({ data }: PartnerDetailTableProps) {
     },
   });
 
+  useEffect(() => {
+    table.setPageIndex(0);
+  }, [globalFilter]);
+
   return (
-    <div className="mb-1 w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
-      <div className="flex flex-col items-center justify-between gap-4 border-b border-slate-200 bg-slate-50/60 p-4 sm:flex-row">
-        <h3 className="text-base font-bold text-slate-800">Chi tiet San pham va Doi tac</h3>
+    <div className="relative mb-1 w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/35 to-transparent" />
+      <div className="flex flex-col gap-4 border-b border-slate-200 bg-gradient-to-br from-slate-50/80 via-white/60 to-blue-50/40 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">Chi tiết</p>
+          <h3 className="mt-1 text-base font-extrabold tracking-tight text-slate-900">Sản phẩm & đối tác</h3>
+          <p className="mt-1 text-xs font-medium text-slate-600">Tìm nhanh theo vùng, chi nhánh, sản phẩm, đối tác...</p>
+        </div>
+
+        <label className="relative w-full sm:w-[420px]">
+          <span className="sr-only">Tìm kiếm</span>
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <input
+            value={globalFilter}
+            onChange={(event) => setGlobalFilter(event.target.value)}
+            placeholder="Tìm kiếm trong bảng..."
+            className="w-full rounded-2xl border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm font-medium text-slate-800 shadow-sm outline-none ring-blue-500/0 transition focus:border-blue-300 focus:ring-4"
+          />
+        </label>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left text-sm">
@@ -150,7 +170,7 @@ export default function PartnerDetailTable({ data }: PartnerDetailTableProps) {
               return (
                 <tr
                   key={row.id} 
-                  className="border-t border-slate-200 bg-white hover:bg-slate-50"
+                  className={`border-t border-slate-200 hover:bg-slate-50 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/40'}`}
                 >
                   {row.getVisibleCells().map(cell => (
                     <td 

@@ -28,30 +28,34 @@ export default function RightDrawer({ isOpen, onClose, title, children }: Drawer
   return createPortal(
     <div className="fixed inset-0 z-50 flex justify-end">
       <div 
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-slate-950/45 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-2xl bg-white h-full shadow-2xl flex flex-col animate-slide-in-right">
+      <div className="relative flex h-full w-full max-w-2xl flex-col overflow-hidden rounded-l-3xl border-l border-white/40 bg-white shadow-2xl shadow-slate-900/25 animate-slide-in-right">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-50/70 via-white/0 to-indigo-50/60" />
         
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="relative flex items-center justify-between border-b border-slate-200/80 bg-white/70 px-6 py-4 backdrop-blur">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-sm">
+            <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-md shadow-blue-500/25">
               <Settings size={16} className="text-white" />
             </div>
-            <h2 className="text-lg font-bold text-gray-800">{title}</h2>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">Cấu hình</p>
+              <h2 className="text-lg font-extrabold tracking-tight text-slate-900">{title}</h2>
+            </div>
           </div>
           <button 
             onClick={onClose} 
-            className="w-8 h-8 rounded-lg hover:bg-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-all duration-200"
+            className="flex h-9 w-9 items-center justify-center rounded-2xl text-slate-400 transition-all duration-200 hover:bg-slate-100 hover:text-slate-700"
           >
             <X size={18} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto bg-gray-50/50">
+        <div className="relative flex-1 overflow-y-auto bg-slate-50/55">
           <div className="p-6">
             {children}
           </div>

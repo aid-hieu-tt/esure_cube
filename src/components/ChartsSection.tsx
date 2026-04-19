@@ -40,15 +40,20 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({ timeTracking, regi
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-5">
       {/* Donut Chart */}
-      <div className="flex h-80 flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-md shadow-slate-200/70 lg:col-span-4">
-        <h3 className="mb-2 text-base font-bold text-slate-800">Tien do thoi gian</h3>
+      <div className="relative flex h-[360px] flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-4 shadow-md shadow-slate-200/70 lg:col-span-4">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/35 to-transparent" />
+        <div className="mb-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">Tiến độ</p>
+          <h3 className="mt-1 text-base font-extrabold tracking-tight text-slate-900">Thời gian trong kỳ</h3>
+          <p className="mt-1 text-xs font-medium text-slate-600">Nhìn nhanh phần thời gian đã trôi qua và còn lại.</p>
+        </div>
         <div className="flex-1 relative flex items-center justify-center">
           {/* Custom inner text */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-            <div className="flex flex-col items-center justify-center rounded-full bg-gradient-to-br from-slate-900 to-blue-700 text-white shadow-xl" style={{ width: '130px', height: '130px' }}>
+            <div className="flex flex-col items-center justify-center rounded-full bg-gradient-to-br from-slate-950 via-slate-900 to-blue-700 text-white shadow-xl ring-1 ring-white/15" style={{ width: '130px', height: '130px' }}>
               <span className="text-5xl font-bold leading-none mb-1">{remainingDays}</span>
-              <span className="text-xl font-medium leading-tight">Ngày</span>
-              <span className="text-sm font-medium opacity-80">Còn lại</span>
+              <span className="text-xl font-semibold leading-tight">Ngày</span>
+              <span className="text-sm font-medium text-white/80">Còn lại</span>
             </div>
           </div>
           <ResponsiveContainer width="100%" height="100%">
@@ -76,8 +81,13 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({ timeTracking, regi
       </div>
 
       {/* Bar Chart */}
-      <div className="flex h-80 w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-md shadow-slate-200/70 lg:col-span-8">
-        <h3 className="mb-2 text-base font-bold text-slate-800">So sanh doanh so va chi tieu</h3>
+      <div className="relative flex h-[360px] w-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-4 shadow-md shadow-slate-200/70 lg:col-span-8">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-400/35 to-transparent" />
+        <div className="mb-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">So sánh</p>
+          <h3 className="mt-1 text-base font-extrabold tracking-tight text-slate-900">Doanh số theo vùng</h3>
+          <p className="mt-1 text-xs font-medium text-slate-600">Click cột hoặc nhãn trục X để lọc nhanh theo vùng.</p>
+        </div>
         <div className="flex-1 overflow-x-auto overflow-y-hidden w-full">
           <div style={{ minWidth: regions.length > 5 ? `${regions.length * 75}px` : '100%', height: '100%' }}>
             <ResponsiveContainer width="100%" height="100%">

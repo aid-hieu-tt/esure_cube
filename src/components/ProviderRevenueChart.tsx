@@ -38,16 +38,20 @@ export const ProviderRevenueChart: React.FC<ProviderRevenueChartProps> = ({ data
 
   if (!data || data.length === 0) {
     return (
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 text-center text-gray-400 shadow-md shadow-slate-200/70">
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 text-center text-slate-400 shadow-md shadow-slate-200/70">
         Không có dữ liệu để hiển thị
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
-      <div className="border-b border-blue-100 bg-gradient-to-r from-blue-100 to-sky-50 py-2 text-center text-sm font-bold text-slate-900">
-        Doanh thu theo Nhà bảo hiểm
+    <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
+      <div className="border-b border-blue-100 bg-gradient-to-r from-blue-50 via-sky-50 to-white px-4 py-3">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-blue-900/60">Xu hướng</p>
+        <div className="mt-1 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <h3 className="text-sm font-extrabold tracking-tight text-slate-900">Doanh thu theo nhà bảo hiểm</h3>
+          <span className="text-xs font-semibold text-slate-600">Click legend/điểm để lọc</span>
+        </div>
       </div>
       <div className="p-4">
         <ResponsiveContainer width="100%" height={320}>

@@ -35,15 +35,16 @@ export const RegionPerformanceTable: React.FC<RegionPerformanceTableProps> = ({ 
   const getTrendIcon = (trend: 'up' | 'down' | 'neutral') => {
     if (trend === 'up') return <span className="text-green-500">▲</span>;
     if (trend === 'down') return <span className="text-red-500">▼</span>;
-    return <span className="text-gray-400">−</span>;
+    return <span className="text-slate-400">−</span>;
   };
 
   return (
-    <section className="mb-1 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
-      <div className="border-b border-slate-200 bg-slate-50/70 px-5 py-4">
-        <h3 className="text-sm font-bold uppercase tracking-wide text-slate-700">
-          Hiệu suất theo Vùng
-        </h3>
+    <section className="relative mb-1 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/35 to-transparent" />
+      <div className="border-b border-slate-200 bg-gradient-to-br from-slate-50/90 via-white/70 to-blue-50/35 px-5 py-4">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">Hiệu suất</p>
+        <h3 className="mt-1 text-base font-extrabold tracking-tight text-slate-900">Theo vùng</h3>
+        <p className="mt-1 text-xs font-medium text-slate-600">Click tên vùng để lọc nhanh theo cross-filter.</p>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">

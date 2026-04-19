@@ -31,9 +31,13 @@ export const MiniTables: React.FC<MiniTablesProps> = ({ topPerformers, inactiveU
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
       {/* Top 7 Doanh số */}
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
-        <div className="border-b border-orange-100 bg-gradient-to-r from-orange-100 to-amber-50 py-2 text-center text-sm font-bold text-slate-900">
-          Top 7 doanh số sản phẩm theo vùng
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
+        <div className="border-b border-orange-100 bg-gradient-to-r from-orange-50 via-amber-50 to-white px-4 py-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-orange-900/60">Top</p>
+          <div className="mt-1 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <h3 className="text-sm font-extrabold tracking-tight text-slate-900">Top doanh số theo vùng & sản phẩm</h3>
+            <span className="text-xs font-semibold text-slate-600">Click để lọc nhanh</span>
+          </div>
         </div>
         <table className="w-full text-sm text-left">
           <thead className="bg-slate-800 text-white">

@@ -41,10 +41,29 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
   branchOptions = [],
   optionsLoading = false,
 }) => {
+  const selectedFilterCount =
+    filters.regionCodes.length +
+    filters.branchCodes.length +
+    filters.paymentStatuses.length +
+    filters.products.length +
+    filters.durations.length +
+    filters.providers.length +
+    filters.partners.length;
+
   return (
-    <section className="rounded-2xl border border-slate-200/80 bg-white/90 p-4 shadow-md shadow-slate-200/70 backdrop-blur md:p-5">
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Bo loc dashboard</h2>
+    <section className="relative overflow-visible rounded-3xl border border-slate-200/80 bg-white/85 p-4 shadow-md shadow-slate-200/70 backdrop-blur md:p-5">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/35 to-transparent" />
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">Bộ lọc</p>
+          <h2 className="mt-1 text-base font-extrabold tracking-tight text-slate-900">Tinh chỉnh dữ liệu hiển thị</h2>
+          <p className="mt-1 text-sm font-medium text-slate-600">Chọn nhiều giá trị cho từng chiều dữ liệu để soi sâu theo nhu cầu.</p>
+        </div>
+
+        <div className="inline-flex items-center gap-2 self-start rounded-full border border-slate-200/80 bg-white/70 px-3 py-1 text-xs font-semibold text-slate-600 sm:self-auto">
+          <span className="rounded-full bg-slate-900 px-2 py-0.5 text-[11px] font-bold text-white">{selectedFilterCount}</span>
+          <span>tiêu chí đang chọn</span>
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
 

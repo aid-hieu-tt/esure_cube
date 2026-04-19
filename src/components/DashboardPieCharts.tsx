@@ -11,14 +11,14 @@ function formatVND(value: number): string {
 }
 
 const COLORS = [
-  '#4285F4', // Google Blue
-  '#FBBC05', // Google Yellow
-  '#EA4335', // Google Red
-  '#00BCD4', // Cyan
-  '#34A853', // Google Green
-  '#F48FB1', // Light Pink
-  '#FF9800', // Orange
-  '#9C27B0'  // Purple
+  '#2563eb',
+  '#0ea5e9',
+  '#22c55e',
+  '#f97316',
+  '#a855f7',
+  '#ef4444',
+  '#14b8a6',
+  '#64748b',
 ];
 
 interface ChartBoxProps {
@@ -32,7 +32,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({ title, dimension, data }) => {
 
   if (!data || data.length === 0) {
     return (
-      <div className="flex h-[300px] flex-col items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white text-gray-400 shadow-md shadow-slate-200/70">
+      <div className="flex h-[300px] flex-col items-center justify-center overflow-hidden rounded-3xl border border-slate-200 bg-white text-slate-400 shadow-md shadow-slate-200/70">
         <p className="mb-2 text-sm font-semibold">{title}</p>
         <p className="text-xs">Không có dữ liệu</p>
       </div>
@@ -53,9 +53,10 @@ const ChartBox: React.FC<ChartBoxProps> = ({ title, dimension, data }) => {
   });
 
   return (
-    <div className="flex h-[300px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
-      <div className="shrink-0 border-b border-slate-200 bg-slate-50 py-2 text-center text-sm font-bold text-slate-800">
-        {title}
+    <div className="flex h-[300px] flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
+      <div className="shrink-0 border-b border-slate-200 bg-gradient-to-r from-slate-50 via-white to-blue-50/40 px-4 py-3">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">Phân rã</p>
+        <h3 className="mt-1 text-sm font-extrabold tracking-tight text-slate-900">{title}</h3>
       </div>
       <div className="flex h-full w-full flex-1 flex-row items-center justify-center p-2">
         {/* Left 50% for strictly the Pie Chart */}
@@ -128,7 +129,7 @@ interface DashboardPieChartsProps {
 
 export const DashboardPieCharts: React.FC<DashboardPieChartsProps> = ({ pieCharts }) => {
   return (
-    <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div className="mb-1 grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
       <ChartBox title="Ngành hàng" dimension="productName" data={pieCharts.product} />
       <ChartBox title="Thời hạn" dimension="durations" data={pieCharts.duration} />
       <ChartBox title="Nhà bảo hiểm" dimension="providers" data={pieCharts.provider} />
