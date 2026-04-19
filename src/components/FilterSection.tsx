@@ -5,7 +5,7 @@ import type { FilterOption } from '../hooks/useCubeFilterOptions';
 export interface FilterState {
   agencies: string[];
   products: string[];
-  categories: string[];
+  paymentStatuses: string[];
   durations: string[];
   providers: string[];
   partners: string[];
@@ -19,7 +19,7 @@ interface FilterSectionProps {
   /** Dynamic options from Cube.js dimensions */
   cityOptions?: FilterOption[];
   productOptions?: FilterOption[];
-  categoryOptions?: FilterOption[];
+  paymentStatusOptions?: FilterOption[];
   durationOptions?: FilterOption[];
   providerOptions?: FilterOption[];
   paymentMethodOptions?: FilterOption[];
@@ -33,7 +33,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
   onChange,
   cityOptions = [],
   productOptions = [],
-  categoryOptions = [],
+  paymentStatusOptions = [],
   durationOptions = [],
   providerOptions = [],
   paymentMethodOptions = [],
@@ -60,10 +60,10 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
           loading={optionsLoading}
         />
         <MultiSelectDropdown
-          label="Ngành hàng"
-          options={categoryOptions}
-          selectedIds={filters.categories}
-          onChange={(ids) => onChange({ ...filters, categories: ids })}
+          label="Trạng thái TT"
+          options={paymentStatusOptions}
+          selectedIds={filters.paymentStatuses}
+          onChange={(ids) => onChange({ ...filters, paymentStatuses: ids })}
           loading={optionsLoading}
         />
         <MultiSelectDropdown

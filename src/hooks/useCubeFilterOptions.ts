@@ -16,7 +16,7 @@ export interface FilterOptions {
   cities: FilterOption[];
   statuses: FilterOption[];
   products: FilterOption[];
-  categories: FilterOption[];
+  paymentStatuses: FilterOption[];
   durations: FilterOption[];
   providers: FilterOption[];
   paymentMethods: FilterOption[];
@@ -42,7 +42,7 @@ export function useCubeFilterOptions(dateRange: DateRangeValue = 'This month'): 
     cities: [],
     statuses: [],
     products: [],
-    categories: [],
+    paymentStatuses: [],
     durations: [],
     providers: [],
     paymentMethods: [],
@@ -57,63 +57,70 @@ export function useCubeFilterOptions(dateRange: DateRangeValue = 'This month'): 
         const orderTimeDim = { dimension: 'dashboard_overview.orderdate', dateRange };
         const itemTimeDim = { dimension: 'dashboard_overview.order_items_createdat', dateRange };
 
+        const tenantFilter = {
+          member: 'dashboard_overview.user_agencies_tenantName',
+          operator: 'equals',
+          values: ['VIETBANK']
+        };
+        const loadWithFilter = (query: any) => cubeLoad({ ...query, filters: [tenantFilter] });
+
         const [cityRows, statusRows, productRows, catRows, durationRows, providerRows, paymentRows, regionRows, branchRows] = await Promise.all([
-          cubeLoad({
+          loadWithFilter({
             measures: ['dashboard_overview.totalRevenue'],
             dimensions: ['dashboard_overview.agencies_name'],
             timeDimensions: [orderTimeDim],
             order: { 'dashboard_overview.totalRevenue': 'desc' },
             limit: 100,
           }),
-          cubeLoad({
+          loadWithFilter({
             dimensions: ['dashboard_overview.status'],
             timeDimensions: [orderTimeDim],
             order: { 'dashboard_overview.status': 'asc' },
             limit: 50,
           }),
-          cubeLoad({
+          loadWithFilter({
             measures: ['dashboard_overview.order_items_totalRevenue'],
             dimensions: ['dashboard_overview.order_items_packageName'],
             timeDimensions: [itemTimeDim],
             order: { 'dashboard_overview.order_items_totalRevenue': 'desc' },
             limit: 200,
           }),
-          cubeLoad({
-            measures: ['dashboard_overview.order_items_totalRevenue'],
-            dimensions: ['dashboard_overview.order_items_productName'],
-            timeDimensions: [itemTimeDim],
-            order: { 'dashboard_overview.order_items_totalRevenue': 'desc' },
-            limit: 200,
+          loadWithFilter({
+            measures: ['dashboard_overview.totalRevenue'],
+            dimensions: ['dashboard_overview.paymentstatus'],
+            timeDimensions: [orderTimeDim],
+            order: { 'dashboard_overview.totalRevenue': 'desc' },
+            limit: 50,
           }),
-          cubeLoad({
+          loadWithFilter({
             measures: ['dashboard_overview.order_items_totalRevenue'],
             dimensions: ['dashboard_overview.order_items_durationName'],
             timeDimensions: [itemTimeDim],
             order: { 'dashboard_overview.order_items_totalRevenue': 'desc' },
             limit: 100,
           }),
-          cubeLoad({
+          loadWithFilter({
             measures: ['dashboard_overview.order_items_totalRevenue'],
             dimensions: ['dashboard_overview.order_items_providerName'],
             timeDimensions: [itemTimeDim],
             order: { 'dashboard_overview.order_items_totalRevenue': 'desc' },
             limit: 50,
           }),
-          cubeLoad({
+          loadWithFilter({
             measures: ['dashboard_overview.totalRevenue'],
             dimensions: ['dashboard_overview.paymentmethod'],
             timeDimensions: [orderTimeDim],
             order: { 'dashboard_overview.totalRevenue': 'desc' },
             limit: 50,
           }),
-          cubeLoad({
+          loadWithFilter({
             measures: ['dashboard_overview.totalRevenue'],
             dimensions: ['dashboard_overview.user_agencies_regionName'],
             timeDimensions: [orderTimeDim],
             order: { 'dashboard_overview.totalRevenue': 'desc' },
             limit: 10,
           }),
-          cubeLoad({
+          loadWithFilter({
             measures: ['dashboard_overview.totalRevenue'],
             dimensions: ['dashboard_overview.user_agencies_branchName'],
             timeDimensions: [orderTimeDim],
@@ -126,7 +133,7 @@ export function useCubeFilterOptions(dateRange: DateRangeValue = 'This month'): 
           cities: toOptionsWithMetric(cityRows, 'dashboard_overview.agencies_name', 'dashboard_overview.totalRevenue'),
           statuses: toOptionsWithMetric(statusRows, 'dashboard_overview.status', 'dashboard_overview.totalRevenue'),
           products: toOptionsWithMetric(productRows, 'dashboard_overview.order_items_packageName', 'dashboard_overview.order_items_totalRevenue'),
-          categories: toOptionsWithMetric(catRows, 'dashboard_overview.order_items_productName', 'dashboard_overview.order_items_totalRevenue'),
+          paymentStatuses: toOptionsWithMetric(catRows, 'dashboard_overview.paymentstatus', 'dashboard_overview.totalRevenue'),
           durations: toOptionsWithMetric(durationRows, 'dashboard_overview.order_items_durationName', 'dashboard_overview.order_items_totalRevenue'),
           providers: toOptionsWithMetric(providerRows, 'dashboard_overview.order_items_providerName', 'dashboard_overview.order_items_totalRevenue'),
           paymentMethods: toOptionsWithMetric(paymentRows, 'dashboard_overview.paymentmethod', 'dashboard_overview.totalRevenue'),

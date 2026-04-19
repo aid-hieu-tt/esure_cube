@@ -8,7 +8,7 @@ export const FilterBadge: React.FC = () => {
   const labels: Record<string, string> = {
     regionCodes: 'Vùng',
     branchCodes: 'Chi nhánh',
-    categories: 'Ngành hàng',
+    paymentStatuses: 'Trạng thái TT',
     products: 'Sản phẩm',
     durations: 'Thời hạn',
     providers: 'Nhà bảo hiểm',

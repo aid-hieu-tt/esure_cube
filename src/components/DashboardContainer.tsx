@@ -18,7 +18,7 @@ import { FilterBadge } from './FilterBadge';
 function DashboardContent() {
   const [dateRange, setDateRange] = useState<DateRangeValue>('This month');
   const [filters, setFilters] = useState<FilterState>({
-    agencies: [], products: [], categories: [], durations: [], providers: [], partners: [], regionCodes: [], branchCodes: []
+    agencies: [], products: [], paymentStatuses: [], durations: [], providers: [], partners: [], regionCodes: [], branchCodes: []
   });
 
   const { filters: crossFilters } = useCrossFilter();
@@ -46,7 +46,7 @@ function DashboardContent() {
     <main className="min-h-screen bg-[#f4f7f6] p-4 md:p-6 lg:p-8 relative">
       <div className="max-w-7xl mx-auto">
         <Header onOpenSettings={() => setIsSettingOpen(true)} dateValue={dateRange} onDateChange={setDateRange} />
-        <FilterSection filters={filters} onChange={setFilters} cityOptions={filterOptions.cities} categoryOptions={filterOptions.categories} productOptions={filterOptions.products} durationOptions={filterOptions.durations} providerOptions={filterOptions.providers} paymentMethodOptions={filterOptions.paymentMethods} regionOptions={filterOptions.regions} branchOptions={filterOptions.branches} optionsLoading={filterOptions.loading} />
+        <FilterSection filters={filters} onChange={setFilters} cityOptions={filterOptions.cities} paymentStatusOptions={filterOptions.paymentStatuses} productOptions={filterOptions.products} durationOptions={filterOptions.durations} providerOptions={filterOptions.providers} paymentMethodOptions={filterOptions.paymentMethods} regionOptions={filterOptions.regions} branchOptions={filterOptions.branches} optionsLoading={filterOptions.loading} />
         <FilterBadge />
         <KPISection kpis={data.kpis} />
         <ChartsSection timeTracking={data.timeTracking} regions={data.regions} />

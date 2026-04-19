@@ -44,11 +44,11 @@ function buildCubeFilters(filters: FilterState): Array<{ member: string; operato
       values: filters.branchCodes,
     });
   }
-  if (filters.categories.length > 0) {
+  if (filters.paymentStatuses.length > 0) {
     cubeFilters.push({
-      member: 'dashboard_overview.order_items_productName',
+      member: 'dashboard_overview.paymentstatus',
       operator: 'equals',
-      values: filters.categories,
+      values: filters.paymentStatuses,
     });
   }
   if (filters.products.length > 0) {
@@ -88,7 +88,7 @@ function buildCrossFilters(crossFilters: CrossFilterState, excludeKey?: string) 
   const map: Record<string, string> = {
     regionCodes: 'dashboard_overview.user_agencies_regionName',
     branchCodes: 'dashboard_overview.user_agencies_branchName',
-    categories: 'dashboard_overview.order_items_productName',
+    paymentStatuses: 'dashboard_overview.paymentstatus',
     products: 'dashboard_overview.order_items_packageName',
     durations: 'dashboard_overview.order_items_durationName',
     providers: 'dashboard_overview.order_items_providerName',
@@ -111,7 +111,7 @@ function buildCrossFilters(crossFilters: CrossFilterState, excludeKey?: string) 
 
 export const useFetchDashboardData = (
   dateRange: DateRangeValue = 'This month',
-  filters: FilterState = { agencies: [], products: [], categories: [], durations: [], providers: [], partners: [], regionCodes: [], branchCodes: [] },
+  filters: FilterState = { agencies: [], products: [], paymentStatuses: [], durations: [], providers: [], partners: [], regionCodes: [], branchCodes: [] },
   crossFilters: CrossFilterState = {}
 ) => {
   const [data, setData] = useState<DashboardData | null>(null);
@@ -141,6 +141,11 @@ export const useFetchDashboardData = (
               ...(baseQuery.filters || []),
               ...globalCubeFilters,
               ...crossCubeFilters,
+              {
+                member: 'dashboard_overview.user_agencies_tenantName',
+                operator: 'equals',
+                values: ['VIETBANK']
+              }
             ],
             timeDimensions: [{
               dimension: dateDim,
@@ -160,7 +165,7 @@ export const useFetchDashboardData = (
           daily: buildQuery(DAILY_ORDERS_QUERY, 'dashboard_overview.orderdate'),
           dailyProvider: buildQuery(DAILY_REVENUE_BY_PROVIDER_QUERY, 'dashboard_overview.order_items_createdat', 'providers'),
           details: buildQuery(PARTNER_DETAIL_QUERY, 'dashboard_overview.order_items_createdat'),
-          pieProduct: buildQuery(REVENUE_BY_PRODUCT_NAME_QUERY, 'dashboard_overview.order_items_createdat', 'categories'),
+          pieProduct: buildQuery(REVENUE_BY_PRODUCT_NAME_QUERY, 'dashboard_overview.order_items_createdat'),
           pieDuration: buildQuery(REVENUE_BY_DURATION_QUERY, 'dashboard_overview.order_items_createdat', 'durations'),
         };
 

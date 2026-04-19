@@ -31,7 +31,7 @@ export default function PartnerDetailTable({ data }: PartnerDetailTableProps) {
     // Cross-filtering constraints
     if (filters['regionCodes']) result = result.filter(r => r.vung === filters['regionCodes']);
     if (filters['branchCodes']) result = result.filter(r => r.chiNhanh === filters['branchCodes']);
-    if (filters['categories']) result = result.filter(r => r.nganhHang === filters['categories']);
+
     if (filters['products']) result = result.filter(r => r.sanPham === filters['products']);
     if (filters['providers']) result = result.filter(r => r.nhaBaoHiem === filters['providers']);
     if (filters['paymentMethod']) result = result.filter(r => r.phuongThucThanhToan === filters['paymentMethod']);
@@ -42,7 +42,6 @@ export default function PartnerDetailTable({ data }: PartnerDetailTableProps) {
     return result.filter(row => 
       row.vung.toLowerCase().includes(lowerFilter) ||
       row.chiNhanh.toLowerCase().includes(lowerFilter) ||
-      row.nganhHang.toLowerCase().includes(lowerFilter) ||
       row.sanPham.toLowerCase().includes(lowerFilter) ||
       row.nhaBaoHiem.toLowerCase().includes(lowerFilter) ||
       row.partnerName.toLowerCase().includes(lowerFilter)
@@ -60,11 +59,6 @@ export default function PartnerDetailTable({ data }: PartnerDetailTableProps) {
       header: 'Chi nhánh',
       cell: info => <span className="font-semibold text-emerald-700 cursor-pointer hover:underline decoration-emerald-700 underline-offset-2" onClick={() => toggleFilter('branchCodes', info.getValue())}>{info.getValue()}</span>,
     }),
-    columnHelper.accessor('nganhHang', {
-      id: 'nganhHang',
-      header: 'Ngành hàng',
-      cell: info => <span className="font-medium text-gray-800 cursor-pointer hover:underline decoration-gray-800 underline-offset-2" onClick={() => toggleFilter('categories', info.getValue())}>{info.getValue()}</span>,
-    }),
     columnHelper.accessor('sanPham', {
       header: 'Sản phẩm',
       cell: info => <span className="text-gray-700 cursor-pointer hover:underline decoration-gray-700 underline-offset-2" onClick={() => toggleFilter('products', info.getValue())}>{info.getValue()}</span>,
@@ -80,6 +74,14 @@ export default function PartnerDetailTable({ data }: PartnerDetailTableProps) {
     columnHelper.accessor('phuongThucThanhToan', {
       header: 'Thanh toán',
       cell: info => <span className="text-gray-700 cursor-pointer hover:underline decoration-gray-700 underline-offset-2" onClick={() => toggleFilter('paymentMethod', info.getValue())}>{info.getValue()}</span>,
+    }),
+    columnHelper.accessor('paymentStatus', {
+      header: 'Trạng thái TT',
+      cell: info => {
+        const val = info.getValue();
+        const color = val === 'Completed' ? 'text-green-700 bg-green-100' : val === 'Pending' ? 'text-yellow-700 bg-yellow-100' : 'text-red-700 bg-red-100';
+        return <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${color}`}>{val}</span>;
+      },
     }),
     columnHelper.accessor('quantity', {
       header: 'SL Bán',

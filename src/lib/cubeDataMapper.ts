@@ -240,12 +240,12 @@ export function mapToPartnerDetails(detailsData: CubeResultRow[]): PartnerDetail
         id: String(i + 1),
         vung: str(row['dashboard_overview.user_agencies_regionName']).trim() || 'N/A',
         chiNhanh: str(row['dashboard_overview.user_agencies_branchName']).trim() || 'N/A',
-        nganhHang: str(row['dashboard_overview.order_items_productName']).trim() || 'Bảo hiểm',
         sanPham: str(row['dashboard_overview.order_items_packageName']).trim().substring(0, 30),
         thoiHan: str(row['dashboard_overview.order_items_durationName']).trim() || '12 tháng (1 năm)',
         nhaBaoHiem: str(row['dashboard_overview.order_items_providerName']).trim() || 'BaoLong',
         phuongThucThanhToan: str(row['dashboard_overview.paymentmethod']).trim() || 'KHÁC',
         partnerName: str(row['dashboard_overview.agencies_name']).trim() || 'N/A',
+        paymentStatus: str(row['dashboard_overview.paymentstatus']).trim() || 'N/A',
         quantity: num(row['dashboard_overview.order_items_quantity']),
         tongDoanhThu: revenue,
       };

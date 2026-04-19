@@ -61,7 +61,6 @@ export interface PartnerDetailRow {
   id: string;
   vung: string;
   chiNhanh: string;
-  nganhHang: string;
   sanPham: string;
   thoiHan: string;
   nhaBaoHiem: string;
@@ -69,6 +68,7 @@ export interface PartnerDetailRow {
   partnerName: string;
   quantity: number;
   tongDoanhThu: number;
+  paymentStatus: string;
 }
 
 export interface ProviderDailyRevenue {
