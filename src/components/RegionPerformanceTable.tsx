@@ -35,36 +35,37 @@ export const RegionPerformanceTable: React.FC<RegionPerformanceTableProps> = ({ 
   const getTrendIcon = (trend: 'up' | 'down' | 'neutral') => {
     if (trend === 'up') return <span className="text-green-500">▲</span>;
     if (trend === 'down') return <span className="text-red-500">▼</span>;
-    return <span className="text-gray-400">−</span>;
+    return <span className="text-slate-400">−</span>;
   };
 
   return (
-    <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-      <div className="px-5 py-4 border-b border-gray-100">
-        <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">
-          Hiệu suất theo Vùng
-        </h3>
+    <section className="relative mb-1 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/35 to-transparent" />
+      <div className="border-b border-slate-200 bg-gradient-to-br from-slate-50/90 via-white/70 to-blue-50/35 px-5 py-4">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">Hiệu suất</p>
+        <h3 className="mt-1 text-base font-extrabold tracking-tight text-slate-900">Theo vùng</h3>
+        <p className="mt-1 text-xs font-medium text-slate-600">Click tên vùng để lọc nhanh theo cross-filter.</p>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-50 text-left">
-              <th className="px-4 py-3 font-semibold text-gray-600 whitespace-nowrap">Vùng</th>
-              <th className="px-4 py-3 font-semibold text-gray-600 text-right whitespace-nowrap">DS ngày</th>
-              <th className="px-4 py-3 font-semibold text-gray-600 text-right whitespace-nowrap">DS tháng</th>
-              <th className="px-4 py-3 font-semibold text-gray-600 text-right whitespace-nowrap">Chỉ tiêu</th>
-              <th className="px-4 py-3 font-semibold text-gray-600 text-center whitespace-nowrap">Hoàn thành</th>
-              <th className="px-4 py-3 font-semibold text-gray-600 text-right whitespace-nowrap">Case Size</th>
+            <tr className="bg-slate-100 text-left">
+              <th className="whitespace-nowrap px-4 py-3 font-semibold text-slate-600">Vùng</th>
+              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold text-slate-600">DS ngày</th>
+              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold text-slate-600">DS tháng</th>
+              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold text-slate-600">Chỉ tiêu</th>
+              <th className="whitespace-nowrap px-4 py-3 text-center font-semibold text-slate-600">Hoàn thành</th>
+              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold text-slate-600">Case Size</th>
 
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="divide-y divide-slate-100">
             {currentData.map((row) => {
               const isSelected = filters['regionCodes'] === row.region;
               return (
               <tr 
                 key={row.id} 
-                className={`hover:bg-blue-50/20 transition-colors ${isSelected ? 'bg-blue-50/40 border-l-4 border-l-blue-600' : 'border-l-4 border-l-transparent'}`}
+                className={`transition-colors hover:bg-blue-50/20 ${isSelected ? 'border-l-4 border-l-blue-600 bg-blue-50/40' : 'border-l-4 border-l-transparent'}`}
               >
                 <td 
                   className="px-4 py-3 font-medium text-gray-800 cursor-pointer hover:underline hover:text-blue-700 decoration-blue-700 underline-offset-2"
