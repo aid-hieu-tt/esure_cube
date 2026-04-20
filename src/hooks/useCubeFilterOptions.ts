@@ -34,8 +34,30 @@ function toOptionsWithMetric(rows: CubeResultRow[], dimKey: string, measureKey: 
       return { val, metric };
     })
     .filter(v => v.val !== '' && v.val !== 'null' && v.val !== 'N/A')
-    .sort((a, b) => b.metric - a.metric) // Sort descending by metric
+    .sort((a, b) => (b.metric || 0) - (a.metric || 0)) // Sort descending by metric
     .map(v => ({ id: v.val, label: v.val, metric: v.metric }));
+}
+
+function combineMasterWithRevenue(
+  masterRows: CubeResultRow[], 
+  revenueRows: CubeResultRow[], 
+  masterDim: string, 
+  revenueDim: string, 
+  measureKey: string
+): FilterOption[] {
+  const metricMap: Record<string, number> = {};
+  for(const r of revenueRows) {
+    const key = String(r[revenueDim] ?? '').trim();
+    if(key) metricMap[key] = Number(r[measureKey] ?? 0);
+  }
+
+  return masterRows
+    .map(r => {
+      const val = String(r[masterDim] ?? '').trim();
+      return { id: val, label: val, metric: metricMap[val] || 0 };
+    })
+    .filter(v => v.label !== '' && v.label !== 'null' && v.label !== 'N/A')
+    .sort((a, b) => (b.metric || 0) - (a.metric || 0));
 }
 
 export function useCubeFilterOptions(dateRange: DateRangeValue = 'This month'): FilterOptions {
@@ -66,7 +88,7 @@ export function useCubeFilterOptions(dateRange: DateRangeValue = 'This month'): 
         };
         const loadWithFilter = (query: any) => cubeLoad({ ...query, filters: [tenantFilter] });
 
-        const [cityRows, statusRows, productRows, catRows, durationRows, providerRows, paymentRows, regionRows, branchRows] = await Promise.all([
+        const [cityRows, statusRows, productRows, catRows, durationRows, providerRows, paymentRows, revenueRegionsRows, revenueBranchesRows, regionRows, branchRows] = await Promise.all([
           loadWithFilter({
             measures: ['dashboard_overview.totalRevenue'],
             dimensions: ['dashboard_overview.agencies_name'],
@@ -120,14 +142,22 @@ export function useCubeFilterOptions(dateRange: DateRangeValue = 'This month'): 
             dimensions: ['dashboard_overview.user_agencies_regionName'],
             timeDimensions: [orderTimeDim],
             order: { 'dashboard_overview.totalRevenue': 'desc' },
-            limit: 10,
+            limit: 50,
           }),
           loadWithFilter({
             measures: ['dashboard_overview.totalRevenue'],
             dimensions: ['dashboard_overview.user_agencies_branchName'],
             timeDimensions: [orderTimeDim],
             order: { 'dashboard_overview.totalRevenue': 'desc' },
-            limit: 40,
+            limit: 200,
+          }),
+          cubeLoad({
+            dimensions: ['regions.name'],
+            limit: 200,
+          }),
+          cubeLoad({
+            dimensions: ['branches.name'],
+            limit: 500,
           }),
         ]);
 
@@ -140,8 +170,8 @@ export function useCubeFilterOptions(dateRange: DateRangeValue = 'This month'): 
           durations: toOptionsWithMetric(durationRows, 'dashboard_overview.order_items_durationName', 'dashboard_overview.order_items_totalRevenue'),
           providers: toOptionsWithMetric(providerRows, 'dashboard_overview.order_items_providerName', 'dashboard_overview.order_items_totalRevenue'),
           paymentMethods: toOptionsWithMetric(paymentRows, 'dashboard_overview.paymentmethod', 'dashboard_overview.totalRevenue'),
-          regions: toOptionsWithMetric(regionRows, 'dashboard_overview.user_agencies_regionName', 'dashboard_overview.totalRevenue'),
-          branches: toOptionsWithMetric(branchRows, 'dashboard_overview.user_agencies_branchName', 'dashboard_overview.totalRevenue'),
+          regions: combineMasterWithRevenue(regionRows, revenueRegionsRows, 'regions.name', 'dashboard_overview.user_agencies_regionName', 'dashboard_overview.totalRevenue'),
+          branches: combineMasterWithRevenue(branchRows, revenueBranchesRows, 'branches.name', 'dashboard_overview.user_agencies_branchName', 'dashboard_overview.totalRevenue'),
           loading: false,
         });
       } catch (err) {
