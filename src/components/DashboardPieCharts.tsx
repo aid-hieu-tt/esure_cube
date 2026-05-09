@@ -55,13 +55,14 @@ const ChartBox: React.FC<ChartBoxProps> = ({ title, dimension, data }) => {
   return (
     <div className="flex h-[300px] flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md shadow-slate-200/70">
       <div className="shrink-0 border-b border-slate-200 bg-gradient-to-r from-slate-50 via-white to-blue-50/40 px-4 py-3">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">Phân rã</p>
         <h3 className="mt-1 text-sm font-extrabold tracking-tight text-slate-900">{title}</h3>
       </div>
       <div className="flex h-full w-full flex-1 flex-row items-center justify-center p-2">
         {/* Left 50% for strictly the Pie Chart */}
-        <div className="w-[50%] h-full flex justify-center items-center">
+        <div className="flex h-full w-1/2 shrink-0 items-center justify-center">
           <PieChart
+            width={260}
+            height={260}
             series={[
               {
                 data: muiData,
@@ -89,7 +90,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({ title, dimension, data }) => {
         </div>
 
         {/* Right 50% strictly for the custom balanced HTML legend */}
-        <div className="w-[50%] h-full flex flex-col justify-center px-4 overflow-y-auto">
+        <div className="flex h-full w-1/2 shrink-0 flex-col justify-center overflow-y-auto px-4">
           <div className="flex flex-col gap-1.5">
             {muiData.map((d) => (
               <div 

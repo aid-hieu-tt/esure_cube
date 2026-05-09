@@ -16,7 +16,7 @@ import { CrossFilterProvider, useCrossFilter } from '../context/CrossFilterConte
 import { FilterBadge } from './FilterBadge';
 
 type DashboardSectionProps = {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   description?: string;
   children: React.ReactNode;
@@ -27,7 +27,7 @@ const DashboardSection: React.FC<DashboardSectionProps> = ({ eyebrow, title, des
     <section className="rounded-3xl border border-slate-200/80 bg-white/70 p-4 shadow-sm shadow-slate-200/60 backdrop-blur md:p-5">
       <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">{eyebrow}</p>
+          {eyebrow && <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">{eyebrow}</p>}
           <h2 className="mt-1 text-lg font-extrabold tracking-tight text-slate-900 md:text-xl">{title}</h2>
           {description ? <p className="mt-1 max-w-3xl text-sm font-medium text-slate-600">{description}</p> : null}
         </div>
@@ -48,7 +48,7 @@ function DashboardContent() {
   const filterOptions = useCubeFilterOptions(dateRange);
   const [isSettingOpen, setIsSettingOpen] = useState(false);
 
-  if (loading) {
+  if (loading && !data) {
     return (
       <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50">
         <div className="pointer-events-none absolute inset-0 gs-grid" />
@@ -79,7 +79,10 @@ function DashboardContent() {
       <div className="pointer-events-none absolute inset-0 gs-noise" />
       <div className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[980px] -translate-x-1/2 rounded-full bg-gradient-to-r from-blue-200/35 via-indigo-200/25 to-cyan-200/25 blur-3xl" />
 
-      <div className="relative mx-auto flex max-w-7xl flex-col gap-5">
+      <div 
+        className="relative mx-auto flex max-w-7xl flex-col gap-5 transition-opacity duration-300"
+        style={{ opacity: refreshing ? 0.85 : 1 }}
+      >
         <Header onOpenSettings={() => setIsSettingOpen(true)} dateValue={dateRange} onDateChange={setDateRange} />
         <FilterSection filters={filters} onChange={setFilters} cityOptions={filterOptions.cities} paymentStatusOptions={filterOptions.paymentStatuses} productOptions={filterOptions.productOptions} packageOptions={filterOptions.packageOptions} durationOptions={filterOptions.durations} providerOptions={filterOptions.providers} paymentMethodOptions={filterOptions.paymentMethods} regionOptions={filterOptions.regions} branchOptions={filterOptions.branches} optionsLoading={filterOptions.loading} />
         <FilterBadge />
@@ -103,7 +106,6 @@ function DashboardContent() {
         </DashboardSection>
 
         <DashboardSection
-          eyebrow="Phân rã"
           title="Cơ cấu & chi tiết"
           description="Phân bổ theo ngành hàng, thời hạn, nhà bảo hiểm, phương thức thanh toán và bảng chi tiết đối tác."
         >
@@ -113,8 +115,9 @@ function DashboardContent() {
       </div>
 
       {refreshing ? (
-        <div className="pointer-events-none fixed bottom-5 right-5 z-40 rounded-full border border-white/70 bg-white/80 px-4 py-2 text-xs font-semibold text-slate-700 shadow-lg shadow-slate-200/70 backdrop-blur">
-          Đang làm mới dữ liệu...
+        <div className="pointer-events-none fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full border border-white/70 bg-white/80 px-4 py-2 text-xs font-semibold text-slate-700 shadow-lg backdrop-blur">
+          <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+          Đang cập nhật...
         </div>
       ) : null}
 

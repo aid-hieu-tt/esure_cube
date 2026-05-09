@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '../lib/utils';
+import { useSmoothTransition } from '../hooks/useSmoothTransition';
 
 interface BaseMetricCardProps {
   title: string;
@@ -25,6 +26,8 @@ export const BaseMetricCard: React.FC<BaseMetricCardProps> = ({
   const heading1 = lines[0] || '';
   const heading2 = lines.slice(1).join(' ') || subtitle;
 
+  const { data: smoothValue, transitioning } = useSmoothTransition(value, 200);
+
   return (
     <div
       onClick={onClick}
@@ -47,8 +50,13 @@ export const BaseMetricCard: React.FC<BaseMetricCardProps> = ({
       )}
       
       <div className="mt-2.5 flex flex-grow flex-col items-center justify-end">
-        <p className={cn('text-2xl font-extrabold tracking-tight lg:text-[26px]', textColor)}>
-          {value}
+        <p className={cn(
+          'text-2xl font-extrabold tracking-tight lg:text-[26px]', 
+          textColor,
+          'transition-opacity duration-200',
+          transitioning ? 'opacity-50' : 'opacity-100'
+        )}>
+          {smoothValue !== null ? smoothValue : value}
         </p>
       </div>
     </div>

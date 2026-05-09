@@ -123,7 +123,7 @@ export const useFetchDashboardData = (
   crossFilters: CrossFilterState = {}
 ) => {
   const [data, setData] = useState<DashboardData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -132,10 +132,9 @@ export const useFetchDashboardData = (
       try {
         // Only show full-page spinner on initial load (no data yet)
         if (!data) {
-          setLoading(true);
-        } else {
-          setRefreshing(true);
+          setInitialLoading(true);
         }
+        setRefreshing(true);
         setError(null);
 
         const globalCubeFilters = buildCubeFilters(filters);
@@ -181,20 +180,20 @@ export const useFetchDashboardData = (
 
         const dashboardData = mapCubeDataToDashboard(results as any);
         setData(dashboardData);
-        setLoading(false);
+        setInitialLoading(false);
         setRefreshing(false);
       } catch (err) {
         console.error('Failed to fetch Cube.js data:', err);
         setError(err instanceof Error ? err.message : 'Failed to fetch data from Cube.js');
-        setLoading(false);
+        setInitialLoading(false);
         setRefreshing(false);
       }
     };
 
     fetchData();
 
-    // Auto-refresh every 60 seconds
-    const interval = setInterval(fetchData, 300_000); // 5 phút
+    // Auto-refresh every 30 minutes
+    const interval = setInterval(fetchData, 1800_000);
     return () => clearInterval(interval);
   }, [
     dateRange ? JSON.stringify(dateRange) : null,
@@ -202,5 +201,5 @@ export const useFetchDashboardData = (
     JSON.stringify(crossFilters)
   ]);
 
-  return { data, loading, refreshing, error };
+  return { data, loading: initialLoading, refreshing, error };
 };

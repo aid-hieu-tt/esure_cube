@@ -32,22 +32,36 @@ export interface CubeResultRow {
 }
 
 export async function cubeLoad(query: CubeQuery): Promise<CubeResultRow[]> {
-  const response = await fetch(`${CUBE_API_URL}/load`, {
-    method: 'POST', // Use POST for complex queries
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': CUBE_TOKEN,
-    },
-    body: JSON.stringify({ query }),
-  });
+  while (true) {
+    const response = await fetch(`${CUBE_API_URL}/load`, {
+      method: 'POST', // Use POST for complex queries
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': CUBE_TOKEN,
+      },
+      body: JSON.stringify({ query }),
+    });
 
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Cube API error (${response.status}): ${error}`);
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Cube API error (${response.status}): ${error}`);
+    }
+
+    const result = await response.json();
+
+    // Xử lý cơ chế xếp hàng của Cube.js khi giới hạn Connection Pool
+    if (result.error === 'Continue wait') {
+      // Chờ 1.5 giây rồi hỏi lại Cube.js server
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      continue;
+    }
+
+    if (result.error) {
+      throw new Error(`Cube API Error: ${result.error}`);
+    }
+
+    return result.data || [];
   }
-
-  const result = await response.json();
-  return result.data || [];
 }
 
 /**
@@ -55,13 +69,19 @@ export async function cubeLoad(query: CubeQuery): Promise<CubeResultRow[]> {
  */
 export async function cubeLoadMulti(queries: Record<string, CubeQuery>): Promise<Record<string, CubeResultRow[]>> {
   const entries = Object.entries(queries);
-  const results = await Promise.all(
+  const settled = await Promise.allSettled(
     entries.map(([, query]) => cubeLoad(query))
   );
-  
+
   const mapped: Record<string, CubeResultRow[]> = {};
   entries.forEach(([key], i) => {
-    mapped[key] = results[i];
+    const result = settled[i];
+    if (result.status === 'fulfilled') {
+      mapped[key] = result.value;
+    } else {
+      console.warn(`Cube query "${key}" failed:`, result.reason);
+      mapped[key] = []; // Graceful fallback
+    }
   });
   return mapped;
 }
